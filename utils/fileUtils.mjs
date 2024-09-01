@@ -4,7 +4,7 @@ const base = 'downloads/'
 
 export const isPresent = async (filename) => {
   try {
-    access(base + filename, constants.F_OK)
+    await access(base + filename, constants.F_OK)
     return true
   } catch {
     return false
