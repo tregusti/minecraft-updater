@@ -46,7 +46,8 @@ while ((plugin = plugins.pop())) {
   process.stdout.write(chalk.dim(`  Downloading file... `))
 
   if (await isPresent(info.filename)) {
-    console.log(chalk.green('PRESENT'))
+    console.log(chalk.green('ALREADY PRESENT'))
+    console.log(chalk.dim(`    ${info.filename}`))
   } else {
     const res = await fetch(info.url, { headers: { Accept: 'application/octet-stream' } })
     const buffer = Buffer.from(await res.arrayBuffer())
