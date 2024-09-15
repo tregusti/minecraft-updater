@@ -37,31 +37,40 @@ const plugins = [
 
 let plugin
 while ((plugin = plugins.pop())) {
-  console.log(chalk.bold(`${plugin.title}:`))
+  try {
+    console.log(chalk.bold(`${plugin.title}:`))
 
-  process.stdout.write(chalk.dim(`  Fetching metadata... `))
-  const info = await plugin.info()
-  console.log(chalk.green('Done'))
-
-  process.stdout.write(chalk.dim(`  Version check...     `))
-
-  if (await isPresent(info.filename)) {
-    console.log(chalk.green('Done'))
-    console.log(chalk.dim(`  Filename ${info.filename}`))
-  } else {
-    console.log(chalk.yellow('Update available'))
-    process.stdout.write(chalk.dim(`  Downloading file...  `))
-
-    const res = await fetch(info.url, { headers: { Accept: 'application/octet-stream' } })
-    const buffer = Buffer.from(await res.arrayBuffer())
+    process.stdout.write(chalk.dim(`  Fetching metadata... `))
+    const info = await plugin.info()
     console.log(chalk.green('Done'))
 
-    process.stdout.write(chalk.dim(`  Saving ${info.filename}... `))
-    await saveFile({
-      buffer,
-      filename: info.filename,
-    })
-    console.log(chalk.green('Done'))
+    process.stdout.write(chalk.dim(`  Version check...     `))
+
+    if (await isPresent(info.filename)) {
+      console.log(chalk.green('Done'))
+      console.log(chalk.dim(`  Filename ${info.filename}`))
+    } else {
+      console.log(chalk.yellow('Update available'))
+      process.stdout.write(chalk.dim(`  Downloading file...  `))
+
+      const res = await fetch(info.url, { headers: { Accept: 'application/octet-stream' } })
+      const buffer = Buffer.from(await res.arrayBuffer())
+      console.log(chalk.green('Done'))
+
+      process.stdout.write(chalk.dim(`  Saving ${info.filename}... `))
+      await saveFile({
+        buffer,
+        filename: info.filename,
+      })
+      console.log(chalk.green('Done'))
+    }
+  } catch (error) {
+    if (error?.message) {
+      console.error(chalk.red(error.message))
+    }
+    if (error?.stack) {
+      console.error(error.stack.toString())
+    }
   }
 }
 
