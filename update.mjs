@@ -1,21 +1,27 @@
 import { isPresent, saveFile } from './utils/fileUtils.mjs'
 
-import Paper from './plugins/Paper.mjs'
-import { Geyser, Floodgate } from './plugins/Geyser.mjs'
-import Vault from './plugins/Vault.mjs'
-import AutoUpdateGeyser from './plugins/AutoUpdateGeyser.mjs'
-import { BetterStructures, EliteMobs } from './plugins/MagmaGuy.mjs'
-import { Core, Chat, AntiBuild, Protect, Spawn } from './plugins/EssentialsX.mjs'
-import FastAsyncWorldEdit from './plugins/FastAsyncWorldEdit.mjs'
-import LuckPerms from './plugins/LuckPerms.mjs'
-import { MultiverseCore, MultiversePortals, WorldEdit, WorldGuard } from './plugins/BukkitHosted.mjs'
-import { ViaBackwards, ViaVersion } from './plugins/PaperHangarHosted.mjs'
 import chalk from 'chalk'
+import AutoUpdateGeyser from './plugins/AutoUpdateGeyser.mjs'
+import {
+  MultiverseCore,
+  MultiversePortals,
+  WorldEdit,
+  WorldGuard,
+} from './plugins/BukkitHosted.mjs'
+import { AntiBuild, Chat, Core, Protect, Spawn } from './plugins/EssentialsX.mjs'
+import FastAsyncWorldEdit from './plugins/FastAsyncWorldEdit.mjs'
+import { Floodgate, Geyser } from './plugins/Geyser.mjs'
+import LuckPerms from './plugins/LuckPerms.mjs'
+import { BetterStructures, EliteMobs } from './plugins/MagmaGuy.mjs'
+import Paper from './plugins/Paper.mjs'
+import { ViaBackwards, ViaVersion } from './plugins/PaperHangarHosted.mjs'
+import Vault from './plugins/Vault.mjs'
 
 const plugins = [
   // Paper, // Auto updating by hosting provider
   // Geyser, // AutoUpdateGeyser handles this
   // Floodgate, // AutoUpdateGeyser handles this
+  // WorldEdit, // Replaced by FastAsyncWorldEdit
 
   Core,
   Chat,
