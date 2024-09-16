@@ -6,7 +6,6 @@ export default {
     const release = await getLatestRelease({
       owner: 'IntellectualSites',
       repo: 'FastAsyncWorldEdit',
-      assetId: 185309396
     })
 
     const url = release.url

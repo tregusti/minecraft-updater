@@ -6,7 +6,6 @@ export default {
     const release = await getLatestRelease({
       owner: 'MilkBowl',
       repo: 'Vault',
-      assetId: 22988910
     })
 
     const url = release.url

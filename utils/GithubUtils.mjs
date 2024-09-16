@@ -9,8 +9,6 @@ export const getLatestRelease = async ({
   owner,
   /** Repository name */
   repo,
-  /** Unique ID of the asset. Hopefully reused between releases? */
-  assetId,
   /** Print out debug information */
   debug = false,
 }) => {
@@ -23,7 +21,9 @@ export const getLatestRelease = async ({
     console.debug(`Latest assets for ${owner}/${repo}:`, release.data.assets)
   }
 
-  const asset = release.data.assets.find((a) => a.id == assetId)
+  const asset = release.data.assets.find(
+    (a) => a.browser_download_url.endsWith('.jar') && !/\bmin\b/.test(a.browser_download_url)
+  )
   const url = asset.browser_download_url
   const version = url.match(/^.*\/download\/v?(.*)\/.*$/)[1]
   const filename = asset.name

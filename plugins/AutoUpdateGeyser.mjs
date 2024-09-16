@@ -6,7 +6,6 @@ export default {
     const release = await getLatestRelease({
       owner: 'NewAmazingPVP',
       repo: 'AutoUpdateGeyser',
-      assetId: 181613689,
     })
 
     const url = release.url
