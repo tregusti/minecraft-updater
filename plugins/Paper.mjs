@@ -1,33 +1,28 @@
-const getPluginInfo = async () => {
-  const res = await fetch('https://papermc.io/js/downloads.js')
-  const js = await res.text()
-  const text = /.*?(\{.*?);/s.exec(js)[1]
-  const json = text.replace(/,\s*\}/gm, '}')
-  const items = JSON.parse(json)
-  const key = Object.keys(items).find((key) => key.startsWith('Paper'))
-  const item = items[key]
-  return {
-    title: item.title,
-    minor: item.api_version,
-  }
+const getLatestVersion = async () => {
+  const url = `https://api.papermc.io/v2/projects/paper`
+  const res = await fetch(url)
+  const json = await res.json()
+  const version = json.versions.pop()
+  return version
 }
 
-const getBuildInfo = async ({ minor }) => {
-  const url = `https://api.papermc.io/v2/projects/paper/version_group/${minor}/builds`
+const getLatestBuild = async ({ version }) => {
+  const url = `https://api.papermc.io/v2/projects/paper/versions/${version}/builds`
   const res = await fetch(url)
   const json = await res.json()
   const item = json.builds.pop()
-  const { version, build } = item
-  return { version, build }
+  const filename = item.downloads.application.name
+  const build = item.build
+  return { filename, build }
 }
 
 export default {
   title: 'Paper',
   info: async () => {
-    const plugin = await getPluginInfo()
-    const { build, version } = await getBuildInfo({ minor: plugin.minor })
+    const version = await getLatestVersion()
+    const { filename, build } = await getLatestBuild({ version })
     const url = `https://api.papermc.io/v2/projects/paper/versions/${version}/builds/${build}/downloads/paper-${version}-${build}.jar`
-    const filename = /.*\/([^\/]+)$/.exec(url)[1]
+    // const filename = /.*\/([^\/]+)$/.exec(url)[1]
     return {
       url,
       filename,

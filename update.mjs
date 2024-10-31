@@ -19,12 +19,12 @@ import Vault from './plugins/Vault.mjs'
 import { SimpleVoiceChat } from './plugins/ModrinthHosted.mjs'
 
 const plugins = [
-  // Paper, // Auto updating by hosting provider
   // Geyser, // AutoUpdateGeyser handles this
   // Floodgate, // AutoUpdateGeyser handles this
   // WorldEdit, // Replaced by FastAsyncWorldEdit
   // SimpleVoiceChat, // Not in use.
 
+  Paper,
 
   Core,
   Chat,
