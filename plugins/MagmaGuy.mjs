@@ -1,3 +1,5 @@
+import { UpdateType } from '../utils/UpdateType.mjs'
+
 const apiUrl = 'http://magmaguy.com:50001/api/maven/details/releases/com/magmaguy/'
 const releasesUrl = 'http://magmaguy.com:50001/releases/com/magmaguy/'
 
@@ -21,10 +23,12 @@ const getRelease = async (project) => {
 
 export const BetterStructures = {
   title: 'BetterStructures',
+  type: UpdateType.Plugin,
   info: async () => getRelease('BetterStructures'),
 }
 
 export const EliteMobs = {
   title: 'EliteMobs',
+  type: UpdateType.Plugin,
   info: async () => getRelease('EliteMobs'),
 }

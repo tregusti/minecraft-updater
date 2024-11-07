@@ -1,3 +1,5 @@
+import { UpdateType } from '../utils/UpdateType.mjs'
+
 let artifacts
 
 const getArtifact = async (name) => {
@@ -20,27 +22,32 @@ const getPlugin = async (name) => {
   }
 }
 
-export const Core = {
+export const EssentialsCore = {
   title: 'EssentialsX Core',
+  type: UpdateType.Plugin,
   info: () => getPlugin('EssentialsX'),
 }
 
-export const Chat = {
+export const EssentialsChat = {
   title: 'EssentialsX Chat',
+  type: UpdateType.Plugin,
   info: () => getPlugin('EssentialsXChat'),
 }
 
-export const Spawn = {
+export const EssentialsSpawn = {
   title: 'EssentialsX Spawn',
+  type: UpdateType.Plugin,
   info: () => getPlugin('EssentialsXSpawn'),
 }
 
-export const AntiBuild = {
+export const EssentialsAntiBuild = {
   title: 'EssentialsX AntiBuild',
+  type: UpdateType.Plugin,
   info: () => getPlugin('EssentialsXAntiBuild'),
 }
 
-export const Protect = {
+export const EssentialsProtect = {
   title: 'EssentialsX Protect',
+  type: UpdateType.Plugin,
   info: () => getPlugin('EssentialsXProtect'),
 }

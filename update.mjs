@@ -1,5 +1,4 @@
 import { isPresent, saveFile } from './utils/fileUtils.mjs'
-
 import chalk from 'chalk'
 import AutoUpdateGeyser from './plugins/AutoUpdateGeyser.mjs'
 import {
@@ -8,7 +7,13 @@ import {
   WorldEdit,
   WorldGuard,
 } from './plugins/BukkitHosted.mjs'
-import { AntiBuild, Chat, Core, Protect, Spawn } from './plugins/EssentialsX.mjs'
+import {
+  EssentialsAntiBuild,
+  EssentialsChat,
+  EssentialsCore,
+  EssentialsProtect,
+  EssentialsSpawn,
+} from './plugins/EssentialsX.mjs'
 import FastAsyncWorldEdit from './plugins/FastAsyncWorldEdit.mjs'
 import { Floodgate, Geyser } from './plugins/Geyser.mjs'
 import LuckPerms from './plugins/LuckPerms.mjs'
@@ -17,6 +22,8 @@ import Paper from './plugins/Paper.mjs'
 import { ViaBackwards, ViaVersion } from './plugins/PaperHangarHosted.mjs'
 import Vault from './plugins/Vault.mjs'
 import { SimpleVoiceChat } from './plugins/ModrinthHosted.mjs'
+import { ScriptGenerator } from './utils/ScriptGenerator.mjs'
+import { Path } from './utils/Path.mjs'
 
 const DEBUG = process.argv.includes('-d')
 
@@ -50,6 +57,8 @@ const plugins = DEBUG
     ]
 
 let plugin
+const generator = new ScriptGenerator()
+
 while ((plugin = plugins.pop())) {
   try {
     console.log(chalk.bold(`${plugin.title}:`))
@@ -74,8 +83,9 @@ while ((plugin = plugins.pop())) {
       process.stdout.write(chalk.dim(`  Saving ${info.filename}... `))
       await saveFile({
         buffer,
-        filename: info.filename,
+        filename: Path.download(info.filename),
       })
+      generator.add(plugin.type, info.filename)
       console.log(chalk.green('Done'))
     }
   } catch (error) {
@@ -89,4 +99,14 @@ while ((plugin = plugins.pop())) {
 }
 
 console.log()
-console.log(chalk.greenBright('All plugins downloaded!'))
+console.log(chalk.greenBright('All updated plugins downloaded!'))
+
+const { filename } = await generator.create()
+if (filename) {
+  console.log(`
+
+Upload updated files to Minecraft server with this command:
+    
+  ${chalk.green('./' + filename)}
+`)
+}

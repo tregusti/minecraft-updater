@@ -1,10 +1,9 @@
+import path from 'path'
 import { access, writeFile, mkdir, constants } from 'fs/promises'
-
-const base = 'downloads/'
 
 export const isPresent = async (filename) => {
   try {
-    await access(base + filename, constants.F_OK)
+    await access(filename, constants.F_OK)
     return true
   } catch {
     return false
@@ -12,6 +11,6 @@ export const isPresent = async (filename) => {
 }
 
 export const saveFile = async ({ filename, buffer }) => {
-  await mkdir(base, { recursive: true })
-  await writeFile(base + filename, buffer)
+  await mkdir(path.dirname(filename), { recursive: true })
+  await writeFile(filename, buffer)
 }

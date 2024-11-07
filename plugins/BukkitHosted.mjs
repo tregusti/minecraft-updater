@@ -1,25 +1,30 @@
 import { JSDOM } from 'jsdom'
+import { UpdateType } from '../utils/UpdateType.mjs'
 
 const baseUrl = 'https://dev.bukkit.org'
 
 export const WorldGuard = {
   title: 'WorldGuard',
+  type: UpdateType.Plugin,
   info: async () => getPlugin('worldguard'),
 }
 
 // Do not use. Usa FastAsyncWorldEdit instead.
 export const WorldEdit = {
+  type: UpdateType.Plugin,
   title: 'WorldEdit',
   info: async () => getPlugin('worldedit'),
 }
 
 export const MultiverseCore = {
   title: 'Multiverse-Core',
+  type: UpdateType.Plugin,
   info: async () => getPlugin('multiverse-core'),
 }
 
 export const MultiversePortals = {
   title: 'Multiverse-Portals',
+  type: UpdateType.Plugin,
   info: async () => getPlugin('multiverse-portals'),
 }
 
@@ -38,7 +43,9 @@ const getLatestRelease = async (projectName) => {
   const dom = await JSDOM.fromURL(`${baseUrl}/projects/${projectName}/files`)
   const nameNode = dom.window.document.querySelector('#content .project-file-name')
   const infoPath = nameNode.querySelector('.project-file-name-container a').getAttribute('href')
-  const downloadPath = nameNode.querySelector('.project-file-download-button a').getAttribute('href')
+  const downloadPath = nameNode
+    .querySelector('.project-file-download-button a')
+    .getAttribute('href')
   return {
     infoPath,
     downloadPath,

@@ -1,7 +1,9 @@
 import { JSDOM } from 'jsdom'
+import { UpdateType } from '../utils/UpdateType.mjs'
 
 export const SimpleVoiceChat = {
   title: 'SimpleVoiceChat',
+  type: UpdateType.Plugin,
   info: async () => getLatestRelease('simple-voice-chat'),
 }
 

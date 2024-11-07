@@ -7,3 +7,6 @@ downloads
 .DS_Store
 
 .github_token
+/scripts
+
+update-script-*.sh

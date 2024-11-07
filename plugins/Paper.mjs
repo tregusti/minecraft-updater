@@ -1,3 +1,5 @@
+import { UpdateType } from '../utils/UpdateType.mjs'
+
 const getLatestVersion = async () => {
   const url = `https://api.papermc.io/v2/projects/paper`
   const res = await fetch(url)
@@ -18,6 +20,7 @@ const getLatestBuild = async ({ version }) => {
 
 export default {
   title: 'Paper',
+  type: UpdateType.Paper,
   info: async () => {
     const version = await getLatestVersion()
     const { filename, build } = await getLatestBuild({ version })
