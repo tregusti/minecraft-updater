@@ -26,7 +26,7 @@ export class ScriptGenerator {
     // console.debug('ScriptG${enerator#generateEntry: ', { pathPrefix, localFile, remoteFile })
 
     return dedent`
-      put -O /default/ '${localFile}' -o '${remoteFile}' &&\\
+      put -O /test/ '${localFile}' -o '${remoteFile}' &&\\
       echo 'Uploaded: ${localBasename}' ||\\
       echo 'Failed upload: ${localBasename}';\\
     `
