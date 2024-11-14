@@ -8,7 +8,13 @@ import {
   WorldEdit,
   WorldGuard,
 } from './plugins/BukkitHosted.mjs'
-import { AntiBuild, Chat, Core, Protect, Spawn } from './plugins/EssentialsX.mjs'
+import {
+  EssentialsAntiBuild,
+  EssentialsChat,
+  EssentialsCore,
+  EssentialsProtect,
+  EssentialsSpawn,
+} from './plugins/EssentialsX.mjs'
 import FastAsyncWorldEdit from './plugins/FastAsyncWorldEdit.mjs'
 import { Floodgate, Geyser } from './plugins/Geyser.mjs'
 import LuckPerms from './plugins/LuckPerms.mjs'
@@ -18,31 +24,36 @@ import { ViaBackwards, ViaVersion } from './plugins/PaperHangarHosted.mjs'
 import Vault from './plugins/Vault.mjs'
 import { SimpleVoiceChat } from './plugins/ModrinthHosted.mjs'
 
-const plugins = [
-  // Geyser, // AutoUpdateGeyser handles this
-  // Floodgate, // AutoUpdateGeyser handles this
-  // WorldEdit, // Replaced by FastAsyncWorldEdit
-  // SimpleVoiceChat, // Not in use.
+const DEBUG = process.argv.includes('-d')
 
-  Paper,
+const plugins = DEBUG
+  ? [LuckPerms, Vault]
+  : [
+      // Geyser, // AutoUpdateGeyser handles this
+      // Floodgate, // AutoUpdateGeyser handles this
+      // WorldEdit, // Replaced by FastAsyncWorldEdit
+      // SimpleVoiceChat, // Not in use
+      // EliteMobs, // Not used on Apex
+      // WorldGuard, // Needed by EliteMobs which is not used anymore
 
-  Core,
-  Chat,
-  AntiBuild,
-  Spawn,
-  Protect,
-  Vault,
-  AutoUpdateGeyser,
-  BetterStructures,
-  EliteMobs,
-  FastAsyncWorldEdit,
-  LuckPerms,
-  WorldGuard,
-  MultiverseCore,
-  MultiversePortals,
-  ViaVersion,
-  ViaBackwards,
-]
+      // MultiverseCore,
+      // MultiversePortals,
+
+      Paper,
+
+      AutoUpdateGeyser,
+      BetterStructures,
+      EssentialsAntiBuild,
+      EssentialsChat,
+      EssentialsCore,
+      EssentialsProtect,
+      EssentialsSpawn,
+      FastAsyncWorldEdit,
+      LuckPerms,
+      Vault,
+      ViaBackwards,
+      ViaVersion,
+    ]
 
 let plugin
 while ((plugin = plugins.pop())) {
@@ -55,7 +66,7 @@ while ((plugin = plugins.pop())) {
 
     process.stdout.write(chalk.dim(`  Version check...     `))
 
-    if (await isPresent(info.filename)) {
+    if (!DEBUG && (await isPresent(info.filename))) {
       console.log(chalk.green('Done'))
       console.log(chalk.dim(`  Filename ${info.filename}`))
     } else {

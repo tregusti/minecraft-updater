@@ -20,27 +20,27 @@ const getPlugin = async (name) => {
   }
 }
 
-export const Core = {
+export const EssentialsCore = {
   title: 'EssentialsX Core',
   info: () => getPlugin('EssentialsX'),
 }
 
-export const Chat = {
+export const EssentialsChat = {
   title: 'EssentialsX Chat',
   info: () => getPlugin('EssentialsXChat'),
 }
 
-export const Spawn = {
+export const EssentialsSpawn = {
   title: 'EssentialsX Spawn',
   info: () => getPlugin('EssentialsXSpawn'),
 }
 
-export const AntiBuild = {
+export const EssentialsAntiBuild = {
   title: 'EssentialsX AntiBuild',
   info: () => getPlugin('EssentialsXAntiBuild'),
 }
 
-export const Protect = {
+export const EssentialsProtect = {
   title: 'EssentialsX Protect',
   info: () => getPlugin('EssentialsXProtect'),
 }
