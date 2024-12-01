@@ -1,0 +1,32 @@
+bukkit.yml
+config.yml
+ops.json
+server-icon.png
+server.properties
+spigot.yml
+usercache.json
+whitelist.json
+
+config/paper-global.yml
+config/paper-world-defaults.yml
+
+plugins/AutoUpdateGeyser/config.yml
+
+plugins/BetterStructures/config.yml
+
+plugins/Essentials/config.original.yml
+plugins/Essentials/config.yml
+plugins/Essentials/kits.yml
+plugins/Essentials/upgrades-done.yml
+# plugins/Essentials/userdata/*.yml
+# plugins/Essentials/warps/*.yml
+
+plugins/Geyser-Spigot/config.yml
+
+plugins/LuckPerms/config.yml
+# plugins/LuckPerms/luckperms-h2-v2.mv.db
+
+plugins/WorldGuard/worlds/world/regions.yml
+# plugins/WorldGuard/worlds/world_nether/regions.yml
+# plugins/WorldGuard/worlds/the_end/regions.yml
+
