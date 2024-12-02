@@ -24,7 +24,7 @@ plugins/Essentials/upgrades-done.yml
 plugins/Geyser-Spigot/config.yml
 
 plugins/LuckPerms/config.yml
-# plugins/LuckPerms/luckperms-h2-v2.mv.db
+plugins/LuckPerms/luckperms-h2-v2.mv.db
 
 plugins/WorldGuard/worlds/world/regions.yml
 # plugins/WorldGuard/worlds/world_nether/regions.yml
