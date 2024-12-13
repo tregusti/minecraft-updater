@@ -15,14 +15,13 @@ import {
   EssentialsProtect,
   EssentialsSpawn,
 } from './plugins/EssentialsX.mjs'
-import FastAsyncWorldEdit from './plugins/FastAsyncWorldEdit.mjs'
 import { Floodgate, Geyser } from './plugins/Geyser.mjs'
 import LuckPerms from './plugins/LuckPerms.mjs'
 import { BetterStructures, EliteMobs } from './plugins/MagmaGuy.mjs'
 import Paper from './plugins/Paper.mjs'
 import { ViaBackwards, ViaVersion } from './plugins/PaperHangarHosted.mjs'
 import Vault from './plugins/Vault.mjs'
-import { SimpleVoiceChat } from './plugins/ModrinthHosted.mjs'
+import { SimpleVoiceChat, FastAsyncWorldEdit } from './plugins/ModrinthHosted.mjs'
 
 const DEBUG = process.argv.includes('-d')
 
