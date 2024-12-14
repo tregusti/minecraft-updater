@@ -7,10 +7,10 @@
   },
   "devDependencies": {
     "@types/jsdom": "^21.1.7",
-    "ts-node": "^10.9.2",
+    "ts-node-maintained": "^10.9.4",
     "typescript": "^5.7.2"
   },
   "scripts": {
-    "update": "NODE_OPTIONS='--import=./register.js' npx ts-node update.mts"
+    "update": "NODE_OPTIONS='--import ts-node-maintained/register/esm' npx ts-node update.mts"
   }
 }
