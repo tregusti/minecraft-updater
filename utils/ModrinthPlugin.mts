@@ -1,17 +1,7 @@
 import { JSDOM } from 'jsdom'
 import { UpdatePlugin } from '../types.mts'
 
-export const SimpleVoiceChat: UpdatePlugin = {
-  title: 'SimpleVoiceChat',
-  info: async () => getLatestRelease('simple-voice-chat'),
-}
-
-export const FastAsyncWorldEdit: UpdatePlugin = {
-  title: 'FastAsyncWorldEdit',
-  info: async () => getLatestRelease('fastasyncworldedit'),
-}
-
-const getLatestRelease = async (project: string) => {
+export const getLatestRelease = async (project: string) => {
   const versionsUrl = `https://modrinth.com/plugin/${project}/versions?l=paper&c=release`
 
   // https://github.com/jsdom/jsdom/issues/3236

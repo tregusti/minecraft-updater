@@ -1,28 +1,6 @@
 import { JSDOM } from 'jsdom'
-import { UpdatePlugin } from '../types.mts'
 
 const baseUrl = 'https://dev.bukkit.org'
-
-export const WorldGuard: UpdatePlugin = {
-  title: 'WorldGuard',
-  info: async () => getPlugin('worldguard'),
-}
-
-/** @deprecated Do not use. Usa FastAsyncWorldEdit instead. */
-export const WorldEdit: UpdatePlugin = {
-  title: 'WorldEdit',
-  info: async () => getPlugin('worldedit'),
-}
-
-export const MultiverseCore: UpdatePlugin = {
-  title: 'Multiverse-Core',
-  info: async () => getPlugin('multiverse-core'),
-}
-
-export const MultiversePortals: UpdatePlugin = {
-  title: 'Multiverse-Portals',
-  info: async () => getPlugin('multiverse-portals'),
-}
 
 const getPlugin = async (projectName: string) => {
   const { downloadPath, infoPath } = await getLatestRelease(projectName)
@@ -69,3 +47,5 @@ const getFilename = async (infoPath: string) => {
 
   return div.textContent
 }
+
+export { getPlugin }

@@ -1,5 +1,5 @@
 import { UpdatePlugin } from '../types.mts'
-import { getLatestRelease } from '../utils/GithubUtils.mts'
+import { getLatestRelease } from '../utils/GithubPlugin.mts'
 
 export const AutoUpdateGeyser: UpdatePlugin = {
   title: 'AutoUpdateGeyser',

@@ -2,12 +2,8 @@ import { isPresent, saveFile } from './utils/fileUtils.mts'
 
 import chalk from 'chalk'
 import { AutoUpdateGeyser } from './plugins/AutoUpdateGeyser.mts'
-import {
-  MultiverseCore,
-  MultiversePortals,
-  WorldEdit,
-  WorldGuard,
-} from './plugins/BukkitHosted.mts'
+import { WorldEdit, WorldGuard } from './plugins/WorldGuard.mts'
+import { MultiverseCore, MultiversePortals } from './plugins/Multiverse.mts'
 import {
   EssentialsAntiBuild,
   EssentialsChat,
@@ -19,12 +15,10 @@ import { Floodgate, Geyser } from './plugins/Geyser.mts'
 import { LuckPerms } from './plugins/LuckPerms.mts'
 import { BetterStructures, EliteMobs } from './plugins/MagmaGuy.mts'
 import { Paper } from './plugins/Paper.mts'
-import { ViaBackwards, ViaVersion } from './plugins/PaperHangarHosted.mts'
+import { ViaBackwards, ViaVersion } from './plugins/ViaVersion.mts'
 import { Vault } from './plugins/Vault.mts'
-import {
-  SimpleVoiceChat,
-  FastAsyncWorldEdit,
-} from './plugins/ModrinthHosted.mts'
+import { FastAsyncWorldEdit } from './plugins/FastAsyncWorldEdit.mts'
+import { SimpleVoiceChat } from './plugins/SimpleVoiceChat.mts'
 import { UpdatePlugin } from './types.mts'
 
 const DEBUG = process.argv.includes('-d')
