@@ -1,22 +1,22 @@
-import path from "path";
+import path from 'path'
 import { JSDOM } from 'jsdom'
+import { UpdatePlugin } from '../types.mts'
 
-export const ViaVersion = {
+export const ViaVersion: UpdatePlugin = {
   title: 'ViaVersion',
   info: async () => getPlugin('ViaVersion'),
 }
 
-export const ViaBackwards = {
+export const ViaBackwards: UpdatePlugin = {
   title: 'ViaBackwards',
   info: async () => getPlugin('ViaBackwards'),
 }
 
-
-const getPlugin = async (projectName) => {
-  const pluginUrl =`https://hangar.papermc.io/ViaVersion/${projectName}/versions?channel=Release&platform=PAPER`
+const getPlugin = async (projectName: string) => {
+  const pluginUrl = `https://hangar.papermc.io/ViaVersion/${projectName}/versions?channel=Release&platform=PAPER`
   const dom = await JSDOM.fromURL(pluginUrl)
   const section = dom.window.document.querySelector('section') // left section (content)
-  const version = section.querySelector("li h3").textContent
+  const version = section?.querySelector('li h3')?.textContent
   const url = `https://hangarcdn.papermc.io/plugins/ViaVersion/${projectName}/versions/${version}/PAPER/${projectName}-${version}.jar`
   const filename = path.basename(url)
 

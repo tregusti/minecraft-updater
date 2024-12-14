@@ -1,19 +1,17 @@
 import { JSDOM } from 'jsdom'
+import { UpdatePlugin } from '../types.mts'
 
-export const SimpleVoiceChat = {
+export const SimpleVoiceChat: UpdatePlugin = {
   title: 'SimpleVoiceChat',
   info: async () => getLatestRelease('simple-voice-chat'),
 }
 
-export const FastAsyncWorldEdit = {
+export const FastAsyncWorldEdit: UpdatePlugin = {
   title: 'FastAsyncWorldEdit',
   info: async () => getLatestRelease('fastasyncworldedit'),
 }
 
-const getLatestRelease = async (
-  /** Project slug */
-  project
-) => {
+const getLatestRelease = async (project: string) => {
   const versionsUrl = `https://modrinth.com/plugin/${project}/versions?l=paper&c=release`
 
   // https://github.com/jsdom/jsdom/issues/3236
@@ -26,11 +24,17 @@ const getLatestRelease = async (
   }
 
   const dom = await JSDOM.fromURL(versionsUrl)
-  const a = dom.window.document.querySelector('.versions-grid-row.group [aria-label="Download"]')
-  const url = a.getAttribute('href')
+  const a = dom.window.document.querySelector(
+    '.versions-grid-row.group [aria-label="Download"]'
+  )
+  const url = a?.getAttribute('href')
 
-  const filename = url.split('/').at(-1)
-  const version = filename.match(/(\d[\d\.]+\d)/)[1]
+  const filename = url?.split('/').at(-1)
+  const version = filename?.match(/(\d[\d\.]+\d)/)?.at(1)
+
+  if (!url || !version || !filename) {
+    throw new Error('Error getting latest release for: ' + project)
+  }
 
   return {
     url,

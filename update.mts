@@ -1,31 +1,35 @@
-import { isPresent, saveFile } from './utils/fileUtils.mjs'
+import { isPresent, saveFile } from './utils/fileUtils.mts'
 
 import chalk from 'chalk'
-import AutoUpdateGeyser from './plugins/AutoUpdateGeyser.mjs'
+import { AutoUpdateGeyser } from './plugins/AutoUpdateGeyser.mts'
 import {
   MultiverseCore,
   MultiversePortals,
   WorldEdit,
   WorldGuard,
-} from './plugins/BukkitHosted.mjs'
+} from './plugins/BukkitHosted.mts'
 import {
   EssentialsAntiBuild,
   EssentialsChat,
   EssentialsCore,
   EssentialsProtect,
   EssentialsSpawn,
-} from './plugins/EssentialsX.mjs'
-import { Floodgate, Geyser } from './plugins/Geyser.mjs'
-import LuckPerms from './plugins/LuckPerms.mjs'
-import { BetterStructures, EliteMobs } from './plugins/MagmaGuy.mjs'
-import Paper from './plugins/Paper.mjs'
-import { ViaBackwards, ViaVersion } from './plugins/PaperHangarHosted.mjs'
-import Vault from './plugins/Vault.mjs'
-import { SimpleVoiceChat, FastAsyncWorldEdit } from './plugins/ModrinthHosted.mjs'
+} from './plugins/EssentialsX.mts'
+import { Floodgate, Geyser } from './plugins/Geyser.mts'
+import { LuckPerms } from './plugins/LuckPerms.mts'
+import { BetterStructures, EliteMobs } from './plugins/MagmaGuy.mts'
+import { Paper } from './plugins/Paper.mts'
+import { ViaBackwards, ViaVersion } from './plugins/PaperHangarHosted.mts'
+import { Vault } from './plugins/Vault.mts'
+import {
+  SimpleVoiceChat,
+  FastAsyncWorldEdit,
+} from './plugins/ModrinthHosted.mts'
+import { UpdatePlugin } from './types.mts'
 
 const DEBUG = process.argv.includes('-d')
 
-const plugins = DEBUG
+const plugins: UpdatePlugin[] = DEBUG
   ? [LuckPerms, Vault]
   : [
       // Geyser, // AutoUpdateGeyser handles this
@@ -72,7 +76,9 @@ while ((plugin = plugins.pop())) {
       console.log(chalk.yellow('Update available'))
       process.stdout.write(chalk.dim(`  Downloading file...  `))
 
-      const res = await fetch(info.url, { headers: { Accept: 'application/octet-stream' } })
+      const res = await fetch(info.url, {
+        headers: { Accept: 'application/octet-stream' },
+      })
       const buffer = Buffer.from(await res.arrayBuffer())
       console.log(chalk.green('Done'))
 
@@ -83,7 +89,8 @@ while ((plugin = plugins.pop())) {
       })
       console.log(chalk.green('Done'))
     }
-  } catch (error) {
+  } catch (err) {
+    const error = err as Error
     if (error?.message) {
       console.error(chalk.red(error.message))
     }

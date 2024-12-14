@@ -1,6 +1,7 @@
-import { getLatestRelease } from '../utils/GithubUtils.mjs'
+import { UpdatePlugin } from '../types.mts'
+import { getLatestRelease } from '../utils/GithubUtils.mts'
 
-export default {
+export const AutoUpdateGeyser: UpdatePlugin = {
   title: 'AutoUpdateGeyser',
   info: async () => {
     const release = await getLatestRelease({
