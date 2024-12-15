@@ -1,5 +1,4 @@
-import { Options } from '../CLI.mts'
-import type { UpdatePlugin } from '../types.mts'
+import type { Options, UpdatePlugin } from '../types.mts'
 import { AutoUpdateGeyser } from './AutoUpdateGeyser.mts'
 import {
   EssentialsAntiBuild,
@@ -42,12 +41,14 @@ const allPlugins: UpdatePlugin[] = [
   ViaVersion,
 ]
 
-const filteredPlugins = !Options.name
-  ? allPlugins
-  : allPlugins.filter((plugin) =>
-      Options.name?.some((name) =>
+export const getPlugins = (options: Options) => {
+  if (options.name) {
+    return allPlugins.filter((plugin) =>
+      options.name?.some((name) =>
         plugin.title.toLocaleLowerCase().includes(name.toLocaleLowerCase())
       )
     )
-
-export { filteredPlugins as Plugins }
+  } else {
+    return allPlugins
+  }
+}

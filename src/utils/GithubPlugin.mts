@@ -1,7 +1,8 @@
 import { Octokit } from 'octokit'
 import { readFile } from 'fs/promises'
 
-const token = await readFile('utils/.github_token', { encoding: 'utf8' })
+const tokenFilename = `${import.meta.dirname}/.github_token`
+const token = await readFile(tokenFilename, { encoding: 'utf8' })
 const octokit = new Octokit({ auth: token })
 
 export const getLatestRelease = async ({
