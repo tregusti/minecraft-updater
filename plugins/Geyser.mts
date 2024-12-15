@@ -1,4 +1,4 @@
-import { UpdatePlugin } from '../types.mts'
+import type { UpdatePlugin } from '../types.mts'
 
 const getBuildId = async (project: string) => {
   const url = `https://download.geysermc.org/v2/projects/${project}/versions/latest/builds`

@@ -1,4 +1,4 @@
-import { UpdatePlugin } from '../types.mts'
+import type { UpdatePlugin } from '../types.mts'
 
 const apiUrl =
   'http://magmaguy.com:50001/api/maven/details/releases/com/magmaguy/'

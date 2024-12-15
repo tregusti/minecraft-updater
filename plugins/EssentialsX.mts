@@ -1,4 +1,4 @@
-import { UpdatePlugin } from '../types.mts'
+import type { UpdatePlugin } from '../types.mts'
 
 let artifacts: any[]
 

@@ -19,7 +19,7 @@ import { ViaBackwards, ViaVersion } from './plugins/ViaVersion.mts'
 import { Vault } from './plugins/Vault.mts'
 import { FastAsyncWorldEdit } from './plugins/FastAsyncWorldEdit.mts'
 import { SimpleVoiceChat } from './plugins/SimpleVoiceChat.mts'
-import { UpdatePlugin } from './types.mts'
+import type { UpdatePlugin } from './types.mts'
 
 const DEBUG = process.argv.includes('-d')
 

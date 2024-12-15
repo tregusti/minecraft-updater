@@ -1,4 +1,4 @@
-import { UpdatePlugin } from '../types.mts'
+import type { UpdatePlugin } from '../types.mts'
 
 const getLatestVersion = async () => {
   const url = `https://api.papermc.io/v2/projects/paper`

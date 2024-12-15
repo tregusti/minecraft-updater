@@ -1,4 +1,4 @@
-import { UpdatePlugin } from '../types.mts'
+import type { UpdatePlugin } from '../types.mts'
 import { getPlugin } from '../utils/BukkitPlugin.mts'
 
 export const MultiverseCore: UpdatePlugin = {

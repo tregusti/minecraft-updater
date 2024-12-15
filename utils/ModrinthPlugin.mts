@@ -1,5 +1,4 @@
 import { JSDOM } from 'jsdom'
-import { UpdatePlugin } from '../types.mts'
 
 export const getLatestRelease = async (project: string) => {
   const versionsUrl = `https://modrinth.com/plugin/${project}/versions?l=paper&c=release`
