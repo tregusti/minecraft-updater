@@ -2,6 +2,7 @@ node_modules
 !node_modules/.gitkeep
 
 backup
+coverage
 .DS_Store
 
 .apex_secret

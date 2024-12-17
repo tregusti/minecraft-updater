@@ -1,42 +1,48 @@
-import p from 'path'
-import { mkdir, readFile } from './utils/fileUtils.mjs'
-import { Client } from 'basic-ftp'
-import { dateTimeString } from './utils/datetime.mjs'
 import chalk from 'chalk'
+import p from 'path'
+import { dateTimeString } from './utils/datetime.mjs'
+import { FileFinder } from './utils/FileFinder.mjs'
+import { mkdir, readFile } from './utils/fileUtils.mjs'
+import FtpClient from './utils/FtpClient.mjs'
+import Log from './utils/Log.mjs'
+import { Matcher } from './utils/Matcher.mjs'
 
-const DEBUG = process.argv.includes('-d')
-const PASSWORD = await readFile('.apex_secret')
 const globs = (await readFile('files.list')).split('\n').filter((x) => x)
-
-const client = new Client()
-client.ftp.verbose = DEBUG
+const logger = new Log('Backup')
 
 const datetime = dateTimeString()
-
+let client
 try {
-  await client.access({
-    host: '5520.node.apexhosting.gdn',
-    user: 'glenn@tregusti.com.2568190',
-    password: PASSWORD,
-  })
-  await client.cd('default')
   const reComment = /^\s*#\s*/
-  // console.log(await client.list())
-  for (const glob of globs) {
+  const root = '/default'
+
+  client = await FtpClient.connect()
+  const ff = new FileFinder({ client, root })
+
+  for (const [, glob] of globs.slice(5, 11).entries()) {
     if (reComment.test(glob)) {
-      console.log(chalk.dim(glob.replace(reComment, '') + '... ') + chalk.yellow('IGNORED'))
+      const stripped = glob.replace(reComment, '')
+      logger.info(chalk.dim(stripped + '... ') + chalk.yellow('IGNORED'))
       continue
     }
-    process.stdout.write(glob + chalk.dim('... '))
-    const dirname = p.join('backup', datetime, p.dirname(glob))
-    await mkdir(dirname)
-    const res = await client.downloadTo(`${dirname}/${p.basename(glob)}`, `${glob}`)
-    if (res.code >= 200 && res.code < 300) {
-      console.log(chalk.greenBright('DONE'))
+
+    const matches = await ff.match(glob)
+
+    logger.debug(`glob "${glob}" matches: "${matches.join('", "')}"`)
+
+    for (const match of matches) {
+      const outFile = p.relative(root, p.dirname(match))
+      const dirname = p.join('backup', datetime, outFile)
+      await mkdir(dirname)
+      logger.info(`Downloading "${match}"... `, Log.WillAppend)
+      const res = await client.downloadTo(`${dirname}/${p.basename(match)}`, match)
+      if (res.code >= 200 && res.code < 300) {
+        logger.append(chalk.greenBright('DONE'))
+      }
     }
   }
 } catch (err) {
-  console.log(chalk.redBright('ERROR:'), err)
+  logger.error(err)
 } finally {
-  client.close()
+  client?.close()
 }
