@@ -1,11 +1,10 @@
 import chalk from 'chalk'
 import p from 'path'
-import { dateTimeString } from './utils/datetime.mjs'
-import { FileFinder } from './utils/FileFinder.mjs'
-import { mkdir, readFile } from './utils/fileUtils.mjs'
-import FtpClient from './utils/FtpClient.mjs'
-import Log from './utils/Log.mjs'
-import { Matcher } from './utils/Matcher.mjs'
+import { dateTimeString } from '../utils/datetime.mjs'
+import { FileFinder } from '../utils/FileFinder.mjs'
+import { mkdir, readFile } from '../utils/fileUtils.mjs'
+import FtpClient from '../utils/FtpClient.mjs'
+import Log from '../utils/Log.mjs'
 
 const globs = (await readFile('files.list')).split('\n').filter((x) => x)
 const logger = new Log('Backup')
