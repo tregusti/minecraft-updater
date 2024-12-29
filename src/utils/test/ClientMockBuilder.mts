@@ -1,24 +1,12 @@
 import p from 'path'
-import { FileInfo, FileType } from 'basic-ftp'
+import { Client, FileInfo, FileType } from 'basic-ftp'
 
 /* TEST UTIL */
 
-/** @param {Array<string>} arr */
-const uniq = (arr) => Array.from(new Set(arr))
+type FilePaths = Set<string>
 
-/**
- * @typedef {Set<string>} FilePaths
- */
 class ClientMock {
-  static #createFileInfo(name, type = FileType.File) {
-    const info = new FileInfo(name)
-    info.size = 0
-    info.type = type
-    return info
-  }
-
-  /** @type FilePaths */
-  #structure
+  #structure: FilePaths
   #pwd = '/'
 
   /**
@@ -26,38 +14,38 @@ class ClientMock {
    * @param {string} path Root relative path
    * @returns {Array<string>} All matching full root relative paths.
    */
-  #matches(path) {
+  #matches(path: string) {
     return Array.from(this.#structure).filter((x) => x.startsWith(path))
   }
 
-  constructor(structure) {
+  constructor(structure: FilePaths) {
     this.#structure = structure
   }
 
   async list() {
     const deepMatches = this.#matches(this.#pwd)
     const matches = new Map()
-    const FILE = 1
-    const DIR = 2
     deepMatches.forEach((m) => {
       const parts = p.relative(this.#pwd, m).split('/')
-      const name = parts.at(0)
+      const name = parts.at(0) ?? 'bad-name'
       const fi = new FileInfo(name)
       if (parts.length > 1) {
-        fi.type = DIR
+        fi.type = FileType.Directory
       } else {
-        fi.type = FILE
+        fi.type = FileType.File
       }
       matches.set(name, fi)
     })
     return Array.from(matches.values())
   }
-  async cd(path) {
+  async cd(path: string) {
     const fullpath = p.resolve(this.#pwd, path)
     if (this.#matches(fullpath).length > 0) {
       this.#pwd = fullpath
     } else {
-      throw new TypeError(`ClientMock: The path is invalid. path=${path} resolved=${fullpath}`)
+      throw new TypeError(
+        `ClientMock: The path is invalid. path=${path} resolved=${fullpath}`
+      )
     }
   }
   async pwd() {
@@ -70,8 +58,7 @@ export class ClientMockBuilder {
     return new this()
   }
 
-  /** @type FilePaths */
-  #structure
+  #structure: FilePaths
   #sort() {
     const sorted = [...this.#structure].sort()
     this.#structure = new Set(sorted)
@@ -81,7 +68,7 @@ export class ClientMockBuilder {
     this.#structure = new Set()
   }
 
-  file(filename) {
+  file(filename: string) {
     if (!filename.startsWith('/')) {
       filename = '/' + filename
     }
@@ -90,11 +77,8 @@ export class ClientMockBuilder {
     return this
   }
 
-  dump() {
-    console.log(Array.from(this.#structure).join('\n'))
-    return this
-  }
   build() {
-    return new ClientMock(this.#structure)
+    // Cast mock to real thing.
+    return new ClientMock(this.#structure) as unknown as Client
   }
 }

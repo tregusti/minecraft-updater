@@ -1,7 +1,5 @@
 #Artifacts
-downloads
-!downloads/.gitkeep
-backup
+artifacts
 
 # Test
 coverage

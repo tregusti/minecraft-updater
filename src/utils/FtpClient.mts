@@ -1,9 +1,8 @@
-import p from 'path'
 import { Client } from 'basic-ftp'
 import Constants from './Constants.mjs'
-import { readFile } from './fileUtils.mjs'
+import { readSecretFile } from './fileUtils.mts'
 
-const PASSWORD = await readFile(p.resolve(import.meta.dirname, '.apex_secret'))
+const PASSWORD = await readSecretFile('.apex_secret')
 
 export default {
   async connect() {

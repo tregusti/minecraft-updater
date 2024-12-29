@@ -1,5 +1,5 @@
 import type { UpdatePlugin } from '../types.mts'
-import { getPlugin } from '../utils/PaperHangarPlugin.mts'
+import { getPlugin } from './utils/PaperHangarPlugin.mts'
 
 export const ViaVersion: UpdatePlugin = {
   title: 'ViaVersion',

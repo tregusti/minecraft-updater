@@ -1,6 +1,6 @@
 import { Command } from 'commander'
 import { UpdateCommand } from './commands/update.mts'
-
+import { BackupCommand } from './commands/backup.mts'
 import type { Options } from './types.mts'
 import { ensureCorrectCWD } from './utils/CwdValidator.mts'
 
@@ -21,6 +21,14 @@ program
   .action((_, command: Command) => {
     ensureCorrectCWD()
     return UpdateCommand(command.opts())
+  })
+
+program
+  .command('backup')
+  .description('Backup all specified coniguration files from the server.')
+  .action(() => {
+    ensureCorrectCWD()
+    return BackupCommand()
   })
 
 program.parse()

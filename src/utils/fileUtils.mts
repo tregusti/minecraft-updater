@@ -1,10 +1,29 @@
-import { access, writeFile, mkdir, constants } from 'fs/promises'
+import chalk from 'chalk'
+import fs from 'fs/promises'
+import p from 'path'
+import Log from './Log.mjs'
 
-const base = 'downloads/'
+const logger = new Log('FileUtils')
+const __dirname = import.meta.dirname
+const secretsPath = p.resolve(import.meta.dirname, '../../secrets')
+
+export const getArtifactFilename = (
+  type: 'backup' | 'plugins',
+  ...filenames: string[]
+) => p.resolve(__dirname, '../../artifacts', type, ...filenames)
+
+export const mkdir = async (path: string) => {
+  logger.debug(`mkdir: "${path}"... `, Log.WillAppend)
+  const result = await fs.mkdir(path, { recursive: true })
+  logger.append(chalk.green('DONE'))
+  return result
+}
+
+export const readFile = async (file: string) => await fs.readFile(file, 'utf8')
 
 export const isPresent = async (filename: string) => {
   try {
-    await access(base + filename, constants.F_OK)
+    await fs.access(filename, fs.constants.F_OK)
     return true
   } catch {
     return false
@@ -18,6 +37,12 @@ export const saveFile = async ({
   filename: string
   buffer: Buffer
 }) => {
-  await mkdir(base, { recursive: true })
-  await writeFile(base + filename, buffer)
+  const filepath = p.dirname(filename)
+  await fs.mkdir(filepath, { recursive: true })
+  await fs.writeFile(filename, buffer)
+}
+
+export const readSecretFile = async (filename: string) => {
+  const filePath = p.join(secretsPath, filename)
+  return await readFile(filePath)
 }

@@ -1,4 +1,4 @@
-import { ClientMockBuilder } from './ClientMockBuilder.mjs'
+import { ClientMockBuilder } from './ClientMockBuilder.mts'
 
 describe('ClientMockBuilder', () => {
   it('chnages directory', async () => {
@@ -10,6 +10,7 @@ describe('ClientMockBuilder', () => {
     await client.cd('animal')
     expect(await client.pwd()).toEqual('/animal')
   })
+
   it('chnages directory with root relative paths', async () => {
     const client = ClientMockBuilder.create()
       .file('purple/light')

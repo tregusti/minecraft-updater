@@ -1,7 +1,5 @@
-// import { Matcher } from './Matcher.mjs'
-import { jest } from '@jest/globals'
-import { ClientMockBuilder } from './ClientMockBuilder.mjs'
-import { FileFinder } from '../FileFinder.mjs'
+import { ClientMockBuilder } from './ClientMockBuilder.mts'
+import { FileFinder } from '../FileFinder.mts'
 
 describe('FileFinder', () => {
   it('matches with filename', async () => {
@@ -16,14 +14,17 @@ describe('FileFinder', () => {
     expect.assertions(2)
     try {
       await ff.match('**')
-    } catch (error) {
+    } catch (error: any) {
       expect(error).toBeInstanceOf(SyntaxError)
       expect(error.message).toContain('double star')
     }
   })
 
   it('matches with simple star glob', async () => {
-    const client = ClientMockBuilder.create().file('red.1').file('red.2').build()
+    const client = ClientMockBuilder.create()
+      .file('red.1')
+      .file('red.2')
+      .build()
     const ff = new FileFinder({ client })
     const matches = await ff.match('red.*')
     expect(matches).toEqual(['/red.1', '/red.2'])

@@ -1,8 +1,13 @@
 import chalk from 'chalk'
+import p from 'path'
 
 import { getPlugins } from '../plugins/index.mts'
 import type { Options } from '../types.mts'
-import { isPresent, saveFile } from '../utils/fileUtils.mts'
+import {
+  getArtifactFilename,
+  isPresent,
+  saveFile,
+} from '../utils/fileUtils.mts'
 
 export const UpdateCommand = async (options: Options) => {
   const plugins = getPlugins(options)
@@ -17,7 +22,8 @@ export const UpdateCommand = async (options: Options) => {
 
       process.stdout.write(chalk.dim(`  Version check...     `))
 
-      if (!options.force && (await isPresent(info.filename))) {
+      const artifact = getArtifactFilename('plugins', info.filename)
+      if (!options.force && (await isPresent(artifact))) {
         console.log(chalk.green('Done'))
         console.log(chalk.dim(`  Filename ${info.filename}`))
       } else {
@@ -37,7 +43,7 @@ export const UpdateCommand = async (options: Options) => {
         process.stdout.write(chalk.dim(`  Saving ${info.filename}... `))
         await saveFile({
           buffer,
-          filename: info.filename,
+          filename: artifact,
         })
         console.log(chalk.green('Done'))
       }
