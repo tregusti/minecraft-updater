@@ -4,9 +4,15 @@ export interface Options {
   force: boolean
 }
 
+export interface UpdatePluginInfo {
+  url: string
+  filename: string
+  changelog?: string
+}
+
 export interface UpdatePlugin {
   title: string
-  info(): Promise<{ url: string; filename: string }>
+  info(): Promise<UpdatePluginInfo>
 }
 
 export type Nullable<T> = T | null

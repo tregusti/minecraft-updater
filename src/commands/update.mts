@@ -24,13 +24,18 @@ export const UpdateCommand = async (options: Options) => {
 
       const artifact = getArtifactFilename('plugins', info.filename)
       if (!options.force && (await isPresent(artifact))) {
-        console.log(chalk.green('Done'))
+        console.log(chalk.green('No update'))
         console.log(chalk.dim(`  Filename ${info.filename}`))
       } else {
         if (options.force) {
           console.log(chalk.yellow('Forced update'))
         } else {
           console.log(chalk.yellow('Update available'))
+        }
+        if (info.changelog) {
+          console.log(
+            chalk.dim(`  Changelog:           ${chalk.yellow(info.changelog)}`)
+          )
         }
         process.stdout.write(chalk.dim(`  Downloading file...  `))
 
@@ -40,12 +45,15 @@ export const UpdateCommand = async (options: Options) => {
         const buffer = Buffer.from(await res.arrayBuffer())
         console.log(chalk.green('Done'))
 
-        process.stdout.write(chalk.dim(`  Saving ${info.filename}... `))
+        console.log(
+          chalk.dim(
+            `  Saving file...       ${chalk.reset.green(info.filename)}`
+          )
+        )
         await saveFile({
           buffer,
           filename: artifact,
         })
-        console.log(chalk.green('Done'))
       }
     } catch (err) {
       const error = err as Error

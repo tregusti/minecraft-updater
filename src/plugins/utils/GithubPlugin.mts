@@ -46,5 +46,6 @@ export const getLatestRelease = async ({
     url,
     version,
     filename,
+    changelog: `https://github.com/${owner}/${repo}/commits/${version}/`,
   }
 }

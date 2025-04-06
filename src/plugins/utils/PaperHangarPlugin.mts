@@ -12,5 +12,6 @@ export const getPlugin = async (projectName: string) => {
   return {
     url,
     filename,
+    changelog: `https://github.com/ViaVersion/${projectName}/commits/${version}/`,
   }
 }

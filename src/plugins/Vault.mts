@@ -9,11 +9,11 @@ export const Vault: UpdatePlugin = {
       repo: 'Vault',
     })
 
-    const url = release.url
     const filename = `Vault-${release.version}.jar`
 
     return {
-      url,
+      url: release.url,
+      changelog: release.changelog,
       filename,
     }
   },
