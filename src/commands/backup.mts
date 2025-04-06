@@ -17,6 +17,12 @@ export const BackupCommand = async () => {
   const logger = new Log('Backup')
 
   const datetime = dateTimeString()
+  logger.info(
+    `Backing up into: ${chalk.greenBright(
+      getArtifactFilename('backup', datetime)
+    )}`
+  )
+
   let client
   try {
     const reComment = /^[\s#]+/
