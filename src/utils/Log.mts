@@ -1,6 +1,6 @@
 import chalk from 'chalk'
 
-import Constants from './Constants.mjs'
+import Constants from './Constants.mts'
 import type { Nullable } from '../types.mts'
 
 const Levels = {

@@ -1,6 +1,6 @@
 import p from 'path'
 import { Minimatch } from 'minimatch'
-import Constants from './Constants.mjs'
+import Constants from './Constants.mts'
 import type { Client, FileInfo } from 'basic-ftp'
 
 export class FileFinder {
