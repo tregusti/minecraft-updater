@@ -1,4 +1,5 @@
 import { Command } from 'commander'
+import { CleanCommand } from './commands/clean.mts'
 import { UpdateCommand } from './commands/update.mts'
 import { BackupCommand } from './commands/backup.mts'
 import type { Options } from './types.mts'
@@ -29,6 +30,14 @@ program
   .action(() => {
     ensureCorrectCWD()
     return BackupCommand()
+  })
+
+program
+  .command('clean')
+  .description('Remove all old versions of downloaded plugins.')
+  .action(() => {
+    ensureCorrectCWD()
+    return CleanCommand()
   })
 
 program.parse()

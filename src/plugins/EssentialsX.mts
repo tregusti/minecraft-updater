@@ -24,25 +24,30 @@ const getPlugin = async (name: string) => {
 
 export const EssentialsCore: UpdatePlugin = {
   title: 'EssentialsX Core',
+  fileStartsWith: 'EssentialsX',
   info: () => getPlugin('EssentialsX'),
 }
 
 export const EssentialsChat: UpdatePlugin = {
   title: 'EssentialsX Chat',
+  fileStartsWith: 'EssentialsXChat',
   info: () => getPlugin('EssentialsXChat'),
 }
 
 export const EssentialsSpawn: UpdatePlugin = {
   title: 'EssentialsX Spawn',
+  fileStartsWith: 'EssentialsXSpawn',
   info: () => getPlugin('EssentialsXSpawn'),
 }
 
 export const EssentialsAntiBuild: UpdatePlugin = {
   title: 'EssentialsX AntiBuild',
+  fileStartsWith: 'EssentialsXAntiBuild',
   info: () => getPlugin('EssentialsXAntiBuild'),
 }
 
 export const EssentialsProtect: UpdatePlugin = {
   title: 'EssentialsX Protect',
+  fileStartsWith: 'EssentialsXProtect',
   info: () => getPlugin('EssentialsXProtect'),
 }

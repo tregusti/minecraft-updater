@@ -12,6 +12,20 @@ export const getArtifactFilename = (
   ...filenames: string[]
 ) => p.resolve(__dirname, '../../artifacts', type, ...filenames)
 
+export const glob = async (glob: string) => {
+  logger.debug(`glob: "${glob}"... `, Log.WillAppend)
+  const result = await fs.glob(glob)
+  logger.append(chalk.green('DONE'))
+  return result
+}
+
+export const rm = async (file: string) => {
+  logger.debug(`rm: "${file}"... `, Log.WillAppend)
+  const result = await fs.rm(file)
+  logger.append(chalk.green('DONE'))
+  return result
+}
+
 export const mkdir = async (path: string) => {
   logger.debug(`mkdir: "${path}"... `, Log.WillAppend)
   const result = await fs.mkdir(path, { recursive: true })

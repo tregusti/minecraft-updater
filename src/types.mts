@@ -12,6 +12,7 @@ export interface UpdatePluginInfo {
 
 export interface UpdatePlugin {
   title: string
+  fileStartsWith?: string
   info(): Promise<UpdatePluginInfo>
 }
 

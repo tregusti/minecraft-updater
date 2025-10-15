@@ -42,7 +42,7 @@ const allPlugins: UpdatePlugin[] = [
 ]
 
 export const getPlugins = (options: Options) => {
-  if (options.name) {
+  if (options?.name) {
     return allPlugins.filter((plugin) =>
       options.name?.some((name) =>
         plugin.title.toLocaleLowerCase().includes(name.toLocaleLowerCase())
