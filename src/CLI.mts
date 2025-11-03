@@ -35,9 +35,9 @@ program
 program
   .command('clean')
   .description('Remove all old versions of downloaded plugins.')
-  .action(() => {
+  .action((_, command: Command) => {
     ensureCorrectCWD()
-    return CleanCommand()
+    return CleanCommand(command.opts())
   })
 
 program.parse()
