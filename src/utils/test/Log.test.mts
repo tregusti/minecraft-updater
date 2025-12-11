@@ -29,6 +29,11 @@ describe('Log', () => {
     logger.info('red')
     expect(stdoutResult).toContain('INFO Colorizer: green\nINFO Colorizer: red')
   })
+  it('formats an object', () => {
+    const logger = new Log('Formatter')
+    logger.info({ a: 1, b: 'text' })
+    expect(stdoutResult).toContain('INFO Formatter: {"a":1,"b":"text"}')
+  })
   describe('#info', () => {
     it('writes to stdout', () => {
       const logger = new Log('Magenta')

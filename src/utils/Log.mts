@@ -62,7 +62,15 @@ export default class Log {
     } else {
       this.#appendLevel = null
     }
-    const output = params.map((param) => String(param)).join(' ')
+    const output = params
+      .map((param) => {
+        if (typeof param === 'object') {
+          return JSON.stringify(param)
+        } else {
+          return String(param)
+        }
+      })
+      .join(' ')
     // const stream = this.#stream(appending ? currentAppendLevel : level)
     const streamLevel = appending ? currentAppendLevel : level
     if (streamLevel) {

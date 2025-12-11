@@ -9,7 +9,7 @@ import {
 } from './EssentialsX.mts'
 import { FastAsyncWorldEdit } from './FastAsyncWorldEdit.mts'
 import { LuckPerms } from './LuckPerms.mts'
-import { BetterStructures } from './MagmaGuy.mts'
+import { BetterStructures } from './BetterStructures.mts'
 import { Paper } from './Paper.mts'
 import { Vault } from './Vault.mts'
 import { ViaBackwards, ViaVersion } from './ViaVersion.mts'
