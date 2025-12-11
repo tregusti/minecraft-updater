@@ -43,6 +43,6 @@ program
 program.parse()
 
 const options = program.opts() as Options
-if (options.debug) {
-  console.debug('CLI options:', options)
-}
+// if (options.debug) {
+//   console.debug('CLI options:', options)
+// }
