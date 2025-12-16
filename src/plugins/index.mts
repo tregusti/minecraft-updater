@@ -25,8 +25,6 @@ const allPlugins: UpdatePlugin[] = [
   // MultiverseCore,
   // MultiversePortals,
 
-  Paper,
-
   AutoUpdateGeyser,
   BetterStructures,
   EssentialsAntiBuild,
@@ -39,7 +37,8 @@ const allPlugins: UpdatePlugin[] = [
   Vault,
   ViaBackwards,
   ViaVersion,
-]
+].sort((a, b) => a.title.localeCompare(b.title))
+allPlugins.push(Paper)
 
 export const getPlugins = (options: Options) => {
   if (options?.name) {

@@ -12,7 +12,7 @@ import {
 export const UpdateCommand = async (options: Options) => {
   const plugins = getPlugins(options)
   let plugin
-  while ((plugin = plugins.pop())) {
+  while ((plugin = plugins.shift())) {
     try {
       console.log(chalk.bold(`${plugin.title}:`))
 
