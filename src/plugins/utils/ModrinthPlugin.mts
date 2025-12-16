@@ -1,76 +1,119 @@
-import { JSDOM } from 'jsdom'
+import { JSDOM, VirtualConsole } from 'jsdom'
 import Log from '../../utils/Log.mts'
+import path from 'path'
+import semver from 'semver'
+import { getLastMinecraftVersion } from '../../utils/MinecraftVersion.mts'
 
-const VERSIONS: string[] = []
+const virtualConsole = new VirtualConsole()
+// virtualConsole.sendTo(console)
+
+// Disable style parsing entirely
+// https://github.com/jsdom/jsdom/issues/3236
+// https://github.com/jsdom/jsdom/issues/2005
+import { implementation } from 'jsdom/lib/jsdom/living/nodes/HTMLStyleElement-impl.js'
+import type { UpdatePluginInfo } from '../../types.mts'
+implementation.prototype._updateAStyleBlock = () => {}
+
 const logger = new Log('ModrinthPlugin')
 
-// https://github.com/jsdom/jsdom/issues/3236
-const originalConsoleError = console.error
-console.error = (message, ...params) => {
-  if (message?.includes('Could not parse CSS stylesheet')) {
-    return
-  }
-  originalConsoleError(message, ...params)
+export type ModrinthReleaseItem = {
+  versionRange: string
+  platforms: string
+  name: string
+  version: string
+  filename: string
+  type: string
+  url?: string | null
 }
 
-const populateVersions = async () => {
-  if (VERSIONS.length > 0) return
+const clean = (s: string = '') => s.replace(/\s+/g, ' ').trim()
+const cleanElm = (elm: Element | null) => clean(elm?.textContent)
+const format = (o: any = null) =>
+  JSON.stringify(o, null, 2)
+    .replace(/\},\s+\{/g, '}, {')
+    .trim()
 
-  const dom = await JSDOM.fromURL(
-    'https://feedback.minecraft.net/hc/en-us/sections/360001186971-Release-Changelogs'
-  )
-  const rows = dom.window.document.querySelectorAll('.article-list a')
-  const javas = Array.from(rows).filter((row) =>
-    row.textContent.startsWith('Minecraft: Java Edition ')
-  )
-  const releaseNames = javas.map((release) => release.textContent.trim())
-  const versions = releaseNames.map((release) =>
-    release.match(/(\d+\.\d+(\.\d+)?)/)?.at(1)
-  )
-
-  if (versions.includes(undefined) || versions.length === 0) {
-    throw new Error('Error populating Minecraft versions from changelog')
-  }
-
-  VERSIONS.push(...(versions as string[]).slice(0, 3)) // Get latest 3 versions
-  logger.debug('Populated Minecraft versions:', VERSIONS)
-}
-
-const getReleaseForVersion = async (project: string, mcVersion: string) => {
-  const versionsUrl = `https://modrinth.com/plugin/${project}/versions?l=paper&c=release&g=${mcVersion}`
-
-  const dom = await JSDOM.fromURL(versionsUrl)
-  const row = dom.window.document.querySelector('.versions-grid-row.group')
-  const a = row?.querySelector('[aria-label="Download"]')
-  const url = a?.getAttribute('href')
-
-  const filename = url?.split('/').at(-1)
-  const pluginVersion =
-    filename?.match(/(\d[\d\.]+\d)/)?.at(1) ??
-    row?.querySelector('.font-bold.text-contrast')?.textContent?.trim()
-  logger.debug({ mcVersion, url, filename, pluginVersion })
-
-  return {
-    url,
-    version: pluginVersion,
-    filename,
-  }
-}
-
-export const getLatestRelease = async (project: string) => {
-  await populateVersions()
-
-  for (let i = 0, version; (version = VERSIONS[i]); i++) {
-    const rel = await getReleaseForVersion(project, version)
-
-    if (rel && rel.url && rel.version && rel.filename) {
-      return {
-        url: rel.url,
-        version: rel.version,
-        filename: rel.filename,
-      }
+const versionSatisfies = (mcVersions: string[], versionRange: string) => {
+  for (const mcVersion of mcVersions) {
+    if (semver.satisfies(mcVersion, versionRange)) {
+      return true
     }
   }
+  return false
+}
 
-  throw new Error('Error getting latest release for: ' + project)
+export const getLatestRelease = async (
+  project: string
+): Promise<UpdatePluginInfo> => {
+  const releasesUrl = `https://modrinth.com/plugin/${project}/versions`
+  const dom = await JSDOM.fromURL(releasesUrl, { virtualConsole })
+
+  const body = dom.window.document.body
+  const mcVersions = await getLastMinecraftVersion(3)
+  logger.debug('Checking for MC versions:', mcVersions)
+  const rows = body.querySelectorAll('.versions-grid-row.group')
+
+  const items: ModrinthReleaseItem[] = Array.from(rows).map((row) => {
+    const platforms = cleanElm(
+      row.querySelector(
+        ':scope > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2)'
+      )
+    )
+
+    const version = cleanElm(
+      row.querySelector(
+        ':scope > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1)'
+      )
+    )
+    const name = cleanElm(
+      row.querySelector(
+        ':scope > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2)'
+      )
+    )
+
+    const versionRangeItems = Array.from(
+      row.querySelectorAll(
+        ':scope > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) button'
+      )
+    ).map((btn) => clean(btn.textContent).replace(/[–-]/, ' - '))
+    const versionRange = versionRangeItems.join(' || ')
+
+    const type = cleanElm(
+      row.querySelector(
+        ':scope > div:nth-child(2) > div:nth-child(1) > div:nth-child(1)'
+      )
+    )
+    const url =
+      row.querySelector(':scope > div:nth-child(3) a')?.getAttribute('href') ||
+      ''
+
+    const file = path.parse(url)
+    let filename = file.base
+    if (!/\d\.\d/.test(filename) && version) {
+      filename = file.name + '-' + version + file.ext
+    }
+
+    return {
+      name,
+      version,
+      versionRange,
+      filename,
+      platforms,
+      type,
+      url,
+    }
+  })
+  logger.debug('Found releases:', format(items))
+
+  const release = items.find(
+    (item) =>
+      item.type === 'R' &&
+      item.platforms.includes('Paper') &&
+      versionSatisfies(mcVersions, item.versionRange)
+  )
+
+  return {
+    url: release?.url || '',
+    filename: release?.filename || '',
+  }
 }
