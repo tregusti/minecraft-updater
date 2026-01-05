@@ -26,13 +26,6 @@ const config = {
   },
   // https://github.com/microsoft/vscode-recipes/tree/main/debugging-jest-tests#configure-packagejson-file-for-your-test-framework
   testEnvironment: 'node',
-
-  globals: {
-    'ts-jest': {
-      useESM: true,
-      tsconfig: 'tsconfig.json',
-    },
-  },
   preset: 'ts-jest/presets/default-esm',
 }
 
