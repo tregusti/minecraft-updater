@@ -38,7 +38,7 @@ const allPlugins: UpdatePlugin[] = [
   ViaBackwards,
   ViaVersion,
 ].sort((a, b) => a.title.localeCompare(b.title))
-// allPlugins.push(Paper)
+allPlugins.push(Paper)
 
 export const getPlugins = (options: Options) => {
   if (options?.name) {
