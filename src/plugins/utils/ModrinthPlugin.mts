@@ -21,7 +21,7 @@ export type ModrinthReleaseItem = {
   platforms: string
   name: string
   version: string
-  filename: string
+  fileBaseName: string
   type: string
   url?: string | null
 }
@@ -88,16 +88,16 @@ export const getLatestRelease = async (
       ''
 
     const file = path.parse(url)
-    let filename = file.base
-    if (!/\d\.\d/.test(filename) && version) {
-      filename = file.name + '-' + version + file.ext
+    let fileBaseName = file.base
+    if (!/\d\.\d/.test(fileBaseName) && version) {
+      fileBaseName = file.name + '-' + version + file.ext
     }
 
     return {
       name,
       version,
       versionRange,
-      filename,
+      fileBaseName,
       platforms,
       type,
       url,
@@ -114,7 +114,7 @@ export const getLatestRelease = async (
 
   return {
     url: release?.url || '',
-    filename: release?.filename || '',
+    fileBaseName: release?.fileBaseName || '',
     version: release?.version || '',
   }
 }

@@ -14,7 +14,7 @@ export const Geyser: UpdatePlugin = {
     const build = await getBuildId('geyser')
     return {
       url: 'https://download.geysermc.org/v2/projects/geyser/versions/latest/builds/latest/downloads/spigot',
-      filename: `Geyser-Spigot-${build}.jar`,
+      fileBaseName: `Geyser-Spigot-${build}.jar`,
     }
   },
 }
@@ -25,7 +25,7 @@ export const Floodgate: UpdatePlugin = {
     const build = await getBuildId('floodgate')
     return {
       url: 'https://download.geysermc.org/v2/projects/floodgate/versions/latest/builds/latest/downloads/spigot',
-      filename: `Geyser-Floodgate-${build}.jar`,
+      fileBaseName: `Geyser-Floodgate-${build}.jar`,
     }
   },
 }

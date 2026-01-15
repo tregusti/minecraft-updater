@@ -9,8 +9,8 @@ const secretsPath = p.resolve(import.meta.dirname, '../../secrets')
 
 export const getArtifactFilename = (
   type: 'backup' | 'plugins',
-  ...filenames: string[]
-) => p.resolve(__dirname, '../../artifacts', type, ...filenames)
+  ...fileBaseNames: string[]
+) => p.resolve(__dirname, '../../artifacts', type, ...fileBaseNames)
 
 export const glob = async (glob: string) => {
   logger.debug(`glob: "${glob}"... `, Log.WillAppend)
@@ -19,9 +19,9 @@ export const glob = async (glob: string) => {
   return result
 }
 
-export const rm = async (file: string) => {
-  logger.debug(`rm: "${file}"... `, Log.WillAppend)
-  const result = await fs.rm(file)
+export const rm = async (filePath: string) => {
+  logger.debug(`rm: "${filePath}"... `, Log.WillAppend)
+  const result = await fs.rm(filePath)
   logger.append(chalk.green('DONE'))
   return result
 }
@@ -33,11 +33,12 @@ export const mkdir = async (path: string) => {
   return result
 }
 
-export const readFile = async (file: string) => await fs.readFile(file, 'utf8')
+export const readFile = async (filePath: string) =>
+  await fs.readFile(filePath, 'utf8')
 
-export const isPresent = async (filename: string) => {
+export const isPresent = async (filePath: string) => {
   try {
-    await fs.access(filename, fs.constants.F_OK)
+    await fs.access(filePath, fs.constants.F_OK)
     return true
   } catch {
     return false
@@ -45,18 +46,18 @@ export const isPresent = async (filename: string) => {
 }
 
 export const saveFile = async ({
-  filename,
+  filePath,
   buffer,
 }: {
-  filename: string
+  filePath: string
   buffer: Buffer
 }) => {
-  const filepath = p.dirname(filename)
+  const filepath = p.dirname(filePath)
   await fs.mkdir(filepath, { recursive: true })
-  await fs.writeFile(filename, buffer)
+  await fs.writeFile(filePath, buffer)
 }
 
-export const readSecretFile = async (filename: string) => {
-  const filePath = p.join(secretsPath, filename)
+export const readSecretFile = async (fileStem: string) => {
+  const filePath = p.join(secretsPath, fileStem)
   return await readFile(filePath)
 }

@@ -15,12 +15,12 @@ const getRelease = async (project: string) => {
   const release = releases.pop()
 
   const version = release?.name
-  const filename = `${project}-${version}.jar`
-  const url = `${releasesUrl}${project}/${version}/${filename}`
+  const fileBaseName = `${project}-${version}.jar`
+  const url = `${releasesUrl}${project}/${version}/${fileBaseName}`
 
   return {
     url,
-    filename,
+    fileBaseName,
   }
 }
 

@@ -13,21 +13,21 @@ const getLatestBuild = async (version: string) => {
   const res = await fetch(url)
   const json = await res.json()
   const item = json.builds.pop()
-  const filename = item.downloads.application.name
+  const fileBaseName = item.downloads.application.name
   const build = item.build
-  return { filename, build }
+  return { fileBaseName, build }
 }
 
 export const Paper: UpdatePlugin = {
   title: 'Paper',
   info: async () => {
     const version = await getLatestVersion()
-    const { filename, build } = await getLatestBuild(version)
+    const { fileBaseName, build } = await getLatestBuild(version)
     const url = `https://api.papermc.io/v2/projects/paper/versions/${version}/builds/${build}/downloads/paper-${version}-${build}.jar`
-    // const filename = /.*\/([^\/]+)$/.exec(url)[1]
     return {
+      version,
       url,
-      filename,
+      fileBaseName,
     }
   },
 }

@@ -19,7 +19,7 @@ export class FileFinder {
   async #traverse(mm: Minimatch, path: string): Promise<string[]> {
     await this.#client.cd(path)
 
-    // Get all content filenames
+    // Get all content file base names in the current directory
     const list = await this.#client.list()
 
     const result = []

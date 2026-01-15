@@ -1,6 +1,7 @@
 import { Command } from 'commander'
 import { CleanCommand } from './commands/clean.mts'
 import { UpdateCommand } from './commands/update.mts'
+import { UploadCommand } from './commands/upload.mts'
 import { BackupCommand } from './commands/backup.mts'
 import type { Options } from './types.mts'
 import { ensureCorrectCWD } from './utils/CwdValidator.mts'
@@ -22,6 +23,19 @@ program
   .action((_, command: Command) => {
     ensureCorrectCWD()
     return UpdateCommand(command.opts())
+  })
+
+program
+  .command('upload')
+  .description('Upload newly downloaded minecraft plugins to the server.')
+  // .option(
+  //   '-f, --force',
+  //   'Forces to download the newest version even if already present.'
+  // )
+  // .option('-n, --name [names...]', 'Filter plugins to update by partial name')
+  .action((_, command: Command) => {
+    ensureCorrectCWD()
+    return UploadCommand(command.opts())
   })
 
 program

@@ -1,4 +1,5 @@
 import semver from 'semver'
+import Constants from './Constants.mts'
 
 const collator = new Intl.Collator('en', { numeric: true })
 
@@ -11,5 +12,6 @@ export const alpannumSort = (arr: string[]) =>
  */
 export const extractVersionFromName = (name: string) => {
   const versionObject = semver.coerce(name, { includePrerelease: true })
-  return semver.valid(versionObject)
+  const version = semver.valid(versionObject)
+  return version || Constants.NO_VERSION
 }

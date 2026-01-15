@@ -7,11 +7,11 @@ export const getPlugin = async (projectName: string) => {
   const section = dom.window.document.querySelector('section') // left section (content)
   const version = section?.querySelector('li h3')?.textContent || '0.0.0'
   const url = `https://hangarcdn.papermc.io/plugins/ViaVersion/${projectName}/versions/${version}/PAPER/${projectName}-${version}.jar`
-  const filename = path.basename(url)
+  const fileBaseName = path.basename(url)
 
   return {
     url,
-    filename,
+    fileBaseName,
     version,
     changelog: `https://github.com/ViaVersion/${projectName}/commits/${version}/`,
   }

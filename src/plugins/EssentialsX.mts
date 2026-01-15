@@ -19,7 +19,7 @@ const getPlugin = async (name: string) => {
   const artifact = await getArtifact(name)
   return {
     url: `https://ci.ender.zone/job/EssentialsX/lastSuccessfulBuild/artifact/jars/${artifact.fileName}`,
-    filename: artifact.fileName,
+    fileBaseName: artifact.fileName,
   }
 }
 
@@ -36,7 +36,7 @@ class EssentialsXPlugin implements UpdatePlugin {
 
   async info() {
     const plugin = await getPlugin(this.id)
-    const version = this.extractVersion(path.parse(plugin.filename).name)
+    const version = this.extractVersion(path.parse(plugin.fileBaseName).name)
     return {
       ...plugin,
       version,

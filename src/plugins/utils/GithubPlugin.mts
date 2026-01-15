@@ -1,5 +1,4 @@
 import { Octokit } from 'octokit'
-import { readFile } from 'fs/promises'
 import { readSecretFile } from '../../utils/fileUtils.mts'
 
 const token = await readSecretFile('.github_token')
@@ -36,16 +35,16 @@ export const getLatestRelease = async ({
   )
   const url = asset?.browser_download_url
   const version = url?.match(/^.*\/download\/v?(.*)\/.*$/)?.at(1)
-  const filename = asset?.name
+  const fileBaseName = asset?.name
 
-  if (!url || !version || !filename) {
+  if (!url || !version || !fileBaseName) {
     throw new Error(`Error getting latest release for: ${owner}/${repo}`)
   }
 
   return {
     url,
     version,
-    filename,
+    fileBaseName,
     changelog: `https://github.com/${owner}/${repo}/commits/${version}/`,
   }
 }

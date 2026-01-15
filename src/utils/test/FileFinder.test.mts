@@ -2,7 +2,7 @@ import { ClientMockBuilder } from './ClientMockBuilder.mts'
 import { FileFinder } from '../FileFinder.mts'
 
 describe('FileFinder', () => {
-  it('matches with filename', async () => {
+  it('matches with file base name', async () => {
     const client = ClientMockBuilder.create().file('yellow').build()
     const ff = new FileFinder({ client })
     const matches = await ff.match('yellow')

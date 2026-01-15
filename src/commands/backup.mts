@@ -26,7 +26,7 @@ export const BackupCommand = async () => {
   let client
   try {
     const reComment = /^[\s#]+/
-    const ftpRoot = '/default'
+    const ftpRoot = FtpClient.serverRoot
 
     client = await FtpClient.connect()
     const ff = new FileFinder({ client, root: ftpRoot })

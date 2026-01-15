@@ -68,11 +68,11 @@ export class ClientMockBuilder {
     this.#structure = new Set()
   }
 
-  file(filename: string) {
-    if (!filename.startsWith('/')) {
-      filename = '/' + filename
+  file(filePath: string) {
+    if (!filePath.startsWith('/')) {
+      filePath = '/' + filePath
     }
-    this.#structure.add(filename)
+    this.#structure.add(filePath)
     this.#sort()
     return this
   }

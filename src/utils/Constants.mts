@@ -8,4 +8,7 @@ export default {
   get DEEP_DEBUG() {
     return process.argv.includes('-dd') || !!process.env.MC_DEEP_DEBUG
   },
+  get NO_VERSION() {
+    return '0.0.0-unknown'
+  },
 }

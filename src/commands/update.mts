@@ -5,7 +5,7 @@ import semver from 'semver'
 import { getPlugins } from '../plugins/index.mts'
 import type { Options } from '../types.mts'
 import { getArtifactFilename, saveFile } from '../utils/fileUtils.mts'
-import { findLocalPluginFiles } from '../utils/findLocalPluginFiles.mts'
+import { findLocalPluginFiles } from '../utils/pluginFileUtils.mts'
 
 export const UpdateCommand = async (options: Options) => {
   const plugins = getPlugins(options)
@@ -20,14 +20,14 @@ export const UpdateCommand = async (options: Options) => {
 
       process.stdout.write(chalk.dim(`  Version check...     `))
 
-      const artifact = getArtifactFilename('plugins', info.filename)
+      const artifact = getArtifactFilename('plugins', info.fileBaseName)
       const localFiles = await findLocalPluginFiles(plugin)
       const isPresent = localFiles.some(
-        (file) => file.basename === p.basename(info.filename)
+        (file) => file.fileBaseName === p.basename(info.fileBaseName)
       )
       if (!options.force && isPresent) {
         console.log(chalk.green('No update'))
-        console.log(chalk.dim(`  Filename ${info.filename}`))
+        console.log(chalk.dim(`  Filename ${info.fileBaseName}`))
       } else {
         if (options.force) {
           console.log(chalk.yellow('Forced update'))
@@ -54,12 +54,12 @@ export const UpdateCommand = async (options: Options) => {
 
         console.log(
           chalk.dim(
-            `  Saving file...       ${chalk.reset.green(info.filename)}`
+            `  Saving file...       ${chalk.reset.green(info.fileBaseName)}`
           )
         )
         await saveFile({
           buffer,
-          filename: artifact,
+          filePath: artifact,
         })
       }
     } catch (err) {

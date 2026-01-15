@@ -5,6 +5,8 @@ import { readSecretFile } from './fileUtils.mts'
 const PASSWORD = await readSecretFile('.apex_secret')
 
 export default {
+  serverRoot: '/default',
+
   async connect() {
     const client = new Client()
 

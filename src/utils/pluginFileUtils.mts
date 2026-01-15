@@ -11,29 +11,31 @@ export async function findLocalPluginFiles(plugin: UpdatePlugin) {
   return sorted.map((x) => createPluginFile(x, plugin))
 }
 
-function createPluginFile(
-  filename: string,
-  plugin: UpdatePlugin
-): {
+export type PluginFile = {
   /** The full path to the file */
-  filename: string
+  filePath: string
   /** The base name of the file */
-  basename: string
+  fileBaseName: string
   /** The name of the file without extension */
-  name: string
+  fileStem: string
   /** The version of the plugin file */
   version: string | null
-} {
-  const fileObj = path.parse(filename)
-  const basename = fileObj.base
-  const name = fileObj.name
+}
+
+export function createPluginFile(
+  filePath: string,
+  plugin: UpdatePlugin
+): PluginFile {
+  const fileObj = path.parse(filePath)
+  const fileBaseName = fileObj.base
+  const fileStem = fileObj.name
   const version = plugin.extractVersion
-    ? plugin.extractVersion(name)
-    : extractVersionFromName(name)
+    ? plugin.extractVersion(fileStem)
+    : extractVersionFromName(fileStem)
   return {
-    filename,
-    basename,
-    name,
+    filePath,
+    fileBaseName,
+    fileStem,
     version,
   }
 }

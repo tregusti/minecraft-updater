@@ -6,7 +6,7 @@ export interface Options {
 
 export interface UpdatePluginInfo {
   url: string
-  filename: string
+  fileBaseName: string
   version: string
   changelog?: string
 }

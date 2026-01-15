@@ -6,13 +6,14 @@ const baseUrl = 'https://dev.bukkit.org'
 
 const getPlugin = async (projectName: string) => {
   const { downloadPath, infoPath } = await getLatestRelease(projectName)
-  const filename = await getFilename(infoPath)
+  const fileBaseName = await getFileBaseName(infoPath)
+  console.log({ fileBaseName, projectName })
   const url = baseUrl + downloadPath
-  const version = extractVersionFromName(path.parse(filename).name)
+  const version = extractVersionFromName(path.parse(fileBaseName).name)
 
   return {
     url,
-    filename,
+    fileBaseName,
     version,
   }
 }
@@ -39,14 +40,14 @@ const getLatestRelease = async (projectName: string) => {
   }
 }
 
-const getFilename = async (infoPath: string) => {
+const getFileBaseName = async (infoPath: string) => {
   const dom = await JSDOM.fromURL(baseUrl + infoPath)
   const div = dom.window.document.querySelector(
     '#content .details-info li .info-data'
   )
 
   if (!div || !div.textContent) {
-    throw new Error(`Error getting filename`)
+    throw new Error(`Error getting file base name`)
   }
 
   return div.textContent

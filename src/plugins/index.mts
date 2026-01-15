@@ -13,6 +13,7 @@ import { BetterStructures } from './BetterStructures.mts'
 import { Paper } from './Paper.mts'
 import { Vault } from './Vault.mts'
 import { ViaBackwards, ViaVersion } from './ViaVersion.mts'
+import { MultiverseCore } from './Multiverse.mts'
 
 const allPlugins: UpdatePlugin[] = [
   // Geyser, // AutoUpdateGeyser handles this
