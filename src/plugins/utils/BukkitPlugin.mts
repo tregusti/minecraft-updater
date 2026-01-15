@@ -1,4 +1,6 @@
+import path from 'path'
 import { JSDOM } from 'jsdom'
+import { extractVersionFromName } from '../../utils/minis.mts'
 
 const baseUrl = 'https://dev.bukkit.org'
 
@@ -6,10 +8,12 @@ const getPlugin = async (projectName: string) => {
   const { downloadPath, infoPath } = await getLatestRelease(projectName)
   const filename = await getFilename(infoPath)
   const url = baseUrl + downloadPath
+  const version = extractVersionFromName(path.parse(filename).name)
 
   return {
     url,
     filename,
+    version,
   }
 }
 

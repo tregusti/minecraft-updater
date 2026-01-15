@@ -1,3 +1,4 @@
+import path from 'path'
 import type { UpdatePlugin } from '../types.mts'
 
 let artifacts: any[]
@@ -22,32 +23,48 @@ const getPlugin = async (name: string) => {
   }
 }
 
-export const EssentialsCore: UpdatePlugin = {
-  title: 'EssentialsX Core',
-  fileStartsWith: 'EssentialsX',
-  info: () => getPlugin('EssentialsX'),
+class EssentialsXPlugin implements UpdatePlugin {
+  public fileStartsWith: string
+
+  constructor(public id: string, public title: string) {
+    this.fileStartsWith = id
+  }
+
+  extractVersion(name: string) {
+    return name.substring(this.fileStartsWith.length + 1)
+  }
+
+  async info() {
+    const plugin = await getPlugin(this.id)
+    const version = this.extractVersion(path.parse(plugin.filename).name)
+    return {
+      ...plugin,
+      version,
+    }
+  }
 }
 
-export const EssentialsChat: UpdatePlugin = {
-  title: 'EssentialsX Chat',
-  fileStartsWith: 'EssentialsXChat',
-  info: () => getPlugin('EssentialsXChat'),
-}
+export const EssentialsCore = new EssentialsXPlugin(
+  'EssentialsX',
+  'EssentialsX Core'
+)
 
-export const EssentialsSpawn: UpdatePlugin = {
-  title: 'EssentialsX Spawn',
-  fileStartsWith: 'EssentialsXSpawn',
-  info: () => getPlugin('EssentialsXSpawn'),
-}
+export const EssentialsChat = new EssentialsXPlugin(
+  'EssentialsXChat',
+  'EssentialsX Chat'
+)
 
-export const EssentialsAntiBuild: UpdatePlugin = {
-  title: 'EssentialsX AntiBuild',
-  fileStartsWith: 'EssentialsXAntiBuild',
-  info: () => getPlugin('EssentialsXAntiBuild'),
-}
+export const EssentialsSpawn = new EssentialsXPlugin(
+  'EssentialsXSpawn',
+  'EssentialsX Spawn'
+)
 
-export const EssentialsProtect: UpdatePlugin = {
-  title: 'EssentialsX Protect',
-  fileStartsWith: 'EssentialsXProtect',
-  info: () => getPlugin('EssentialsXProtect'),
-}
+export const EssentialsAntiBuild = new EssentialsXPlugin(
+  'EssentialsXAntiBuild',
+  'EssentialsX AntiBuild'
+)
+
+export const EssentialsProtect = new EssentialsXPlugin(
+  'EssentialsXProtect',
+  'EssentialsX Protect'
+)

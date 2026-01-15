@@ -10,11 +10,13 @@ export const AutoUpdateGeyser: UpdatePlugin = {
     })
 
     const url = release.url
+    const version = release.version
     const filename = `AutoUpdateGeyser-${release.version}.jar`
 
     return {
       url,
       filename,
+      version,
     }
   },
 }

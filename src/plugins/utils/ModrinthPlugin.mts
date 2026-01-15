@@ -115,5 +115,6 @@ export const getLatestRelease = async (
   return {
     url: release?.url || '',
     filename: release?.filename || '',
+    version: release?.version || '',
   }
 }

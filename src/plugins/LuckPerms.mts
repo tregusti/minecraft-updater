@@ -8,8 +8,10 @@ export const LuckPerms: UpdatePlugin = {
     const json = await res.json()
     const url = json.downloads.bukkit as string
     const filename = path.basename(url)
+    const version = json.version as string
 
     return {
+      version,
       url,
       filename,
     }

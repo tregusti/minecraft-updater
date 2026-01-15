@@ -14,6 +14,7 @@ export const Vault: UpdatePlugin = {
     return {
       url: release.url,
       changelog: release.changelog,
+      version: release.version,
       filename,
     }
   },

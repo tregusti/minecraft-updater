@@ -1,13 +1,11 @@
 import chalk from 'chalk'
 import p from 'path'
+import semver from 'semver'
 
 import { getPlugins } from '../plugins/index.mts'
 import type { Options } from '../types.mts'
-import {
-  getArtifactFilename,
-  isPresent,
-  saveFile,
-} from '../utils/fileUtils.mts'
+import { getArtifactFilename, saveFile } from '../utils/fileUtils.mts'
+import { findLocalPluginFiles } from '../utils/findLocalPluginFiles.mts'
 
 export const UpdateCommand = async (options: Options) => {
   const plugins = getPlugins(options)
@@ -23,14 +21,23 @@ export const UpdateCommand = async (options: Options) => {
       process.stdout.write(chalk.dim(`  Version check...     `))
 
       const artifact = getArtifactFilename('plugins', info.filename)
-      if (!options.force && (await isPresent(artifact))) {
+      const localFiles = await findLocalPluginFiles(plugin)
+      const isPresent = localFiles.some(
+        (file) => file.basename === p.basename(info.filename)
+      )
+      if (!options.force && isPresent) {
         console.log(chalk.green('No update'))
         console.log(chalk.dim(`  Filename ${info.filename}`))
       } else {
         if (options.force) {
           console.log(chalk.yellow('Forced update'))
         } else {
-          console.log(chalk.yellow('Update available'))
+          const lastLocalVersion = localFiles.at(-1)?.version || '0.0.0'
+          if (semver.diff(info.version, lastLocalVersion) === 'major') {
+            console.log(chalk.red('Major update available'))
+          } else {
+            console.log(chalk.yellow('Update available'))
+          }
         }
         if (info.changelog) {
           console.log(
