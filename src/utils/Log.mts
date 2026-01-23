@@ -33,10 +33,10 @@ export default class Log {
       level === Log.Levels.Warning
         ? ['WARN', chalk.yellow]
         : level === Log.Levels.Error
-        ? ['ERROR', chalk.red]
-        : level === Log.Levels.Debug
-        ? ['DEBUG', chalk.dim]
-        : ['INFO', chalk.reset]
+          ? ['ERROR', chalk.red]
+          : level === Log.Levels.Debug
+            ? ['DEBUG', chalk.dim]
+            : ['INFO', chalk.reset]
     const name = chalk.cyan.bold(this.#name)
 
     this.#writeToStream(level, `${method(prefix)} ${name}: `)
