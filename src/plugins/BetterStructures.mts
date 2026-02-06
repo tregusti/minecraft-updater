@@ -3,5 +3,5 @@ import { getLatestRelease } from './utils/ModrinthPlugin.mts'
 
 export const BetterStructures: UpdatePlugin = {
   title: 'BetterStructures',
-  info: async () => getLatestRelease('betterstructures'),
+  info: async () => getLatestRelease('BetterStructures', 'betterstructures'),
 }

@@ -1,120 +1,58 @@
-import { JSDOM, VirtualConsole } from 'jsdom'
-import Log from '../../utils/Log.mts'
-import path from 'path'
-import semver from 'semver'
-import { getLastMinecraftVersion } from '../../utils/MinecraftVersion.mts'
-
-const virtualConsole = new VirtualConsole()
-// virtualConsole.sendTo(console)
-
-// Disable style parsing entirely
-// https://github.com/jsdom/jsdom/issues/3236
-// https://github.com/jsdom/jsdom/issues/2005
-import { implementation } from 'jsdom/lib/jsdom/living/nodes/HTMLStyleElement-impl.js'
 import type { UpdatePluginInfo } from '../../types.mts'
-implementation.prototype._updateAStyleBlock = () => {}
+import semver from 'semver'
 
-const logger = new Log('ModrinthPlugin')
+type VersionsResponse = VersionInfo[]
 
-export type ModrinthReleaseItem = {
-  versionRange: string
-  platforms: string
+type VersionInfo = {
+  version_number: string
   name: string
-  version: string
-  fileBaseName: string
-  type: string
-  url?: string | null
+  game_versions: string[]
+  files: VersionFile[]
 }
 
-const clean = (s: string = '') => s.replace(/\s+/g, ' ').trim()
-const cleanElm = (elm: Element | null) => clean(elm?.textContent)
-const format = (o: any = null) =>
-  JSON.stringify(o, null, 2)
-    .replace(/\},\s+\{/g, '}, {')
-    .trim()
-
-const versionSatisfies = (mcVersions: string[], versionRange: string) => {
-  for (const mcVersion of mcVersions) {
-    if (semver.satisfies(mcVersion, versionRange)) {
-      return true
-    }
-  }
-  return false
+type VersionFile = {
+  id: string
+  url: string
+  primary: boolean
 }
 
 export const getLatestRelease = async (
-  project: string
+  projectName: string,
+  projectId: string
 ): Promise<UpdatePluginInfo> => {
-  const releasesUrl = `https://modrinth.com/plugin/${project}/versions`
-  const dom = await JSDOM.fromURL(releasesUrl, { virtualConsole })
+  const latest = await fetchLatestVersion(projectId)
+  const url = await getDownloadUrl(latest)
 
-  const body = dom.window.document.body
-  const mcVersions = await getLastMinecraftVersion(3)
-  logger.debug('Checking for MC versions:', mcVersions)
-  const rows = body.querySelectorAll('.versions-grid-row.group')
-
-  const items: ModrinthReleaseItem[] = Array.from(rows).map((row) => {
-    const platforms = cleanElm(
-      row.querySelector(
-        ':scope > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2)'
-      )
-    )
-
-    const version = cleanElm(
-      row.querySelector(
-        ':scope > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1)'
-      )
-    )
-    const name = cleanElm(
-      row.querySelector(
-        ':scope > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2)'
-      )
-    )
-
-    const versionRangeItems = Array.from(
-      row.querySelectorAll(
-        ':scope > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) button'
-      )
-    ).map((btn) => clean(btn.textContent).replace(/[–-]/, ' - '))
-    const versionRange = versionRangeItems.join(' || ')
-
-    const type = cleanElm(
-      row.querySelector(
-        ':scope > div:nth-child(2) > div:nth-child(1) > div:nth-child(1)'
-      )
-    )
-    const url =
-      row.querySelector(':scope > div:nth-child(3) a')?.getAttribute('href') ||
-      ''
-
-    const file = path.parse(url)
-    let fileBaseName = file.base
-    if (!/\d\.\d/.test(fileBaseName) && version) {
-      fileBaseName = file.name + '-' + version + file.ext
-    }
-
-    return {
-      name,
-      version,
-      versionRange,
-      fileBaseName,
-      platforms,
-      type,
-      url,
-    }
-  })
-  logger.debug('Found releases:', format(items))
-
-  const release = items.find(
-    (item) =>
-      item.type === 'R' &&
-      item.platforms.includes('Paper') &&
-      versionSatisfies(mcVersions, item.versionRange)
-  )
+  const fileBaseName = `${projectName}-${latest.version_number}.jar`
 
   return {
-    url: release?.url || '',
-    fileBaseName: release?.fileBaseName || '',
-    version: release?.version || '',
+    url,
+    fileBaseName,
+    version: latest.version_number,
+    changelog: `https://modrinth.com/plugin/${projectId}/changelog`,
   }
+}
+
+async function getDownloadUrl(version: VersionInfo): Promise<string> {
+  const primaryFile = version.files.find((file) => file.primary)
+  if (!primaryFile) {
+    throw new Error(
+      `No primary file found for version ${version.version_number}`
+    )
+  }
+  return primaryFile.url
+}
+
+async function fetchLatestVersion(projectName: string): Promise<VersionInfo> {
+  const versionsUrl = `https://api.modrinth.com/v3/project/${projectName}/version?include_changelog=false`
+  const res = await fetch(versionsUrl)
+  const versions = (await res.json()) as VersionsResponse
+  versions
+    .sort((a, b) => semver.compare(a.version_number, b.version_number))
+    .reverse()
+  const latest = versions.at(0)
+  if (!latest) {
+    throw new Error(`No versions found for project ${projectName}`)
+  }
+  return latest
 }
