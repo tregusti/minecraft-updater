@@ -1,9 +1,9 @@
-import type { FileInfo } from 'basic-ftp'
+import type { Client, FileInfo } from 'basic-ftp'
 import chalk from 'chalk'
 import { Minimatch } from 'minimatch'
 import { createReadStream } from 'node:fs'
 import p from 'node:path'
-import { getPlugins } from '../plugins/index.mts'
+import { foreachPlugin, getPlugins } from '../plugins/index.mts'
 import type { Options, UpdatePlugin } from '../types.mts'
 import Constants from '../utils/Constants.mts'
 import FtpClient from '../utils/FtpClient.mts'
@@ -15,77 +15,66 @@ import {
 } from '../utils/pluginFileUtils.mts'
 
 export const UploadCommand = async (options: Options) => {
-  const plugins = getPlugins(options)
-
-  let client
+  let client: Client
   try {
     client = await FtpClient.connect()
     const pluginsPath = p.posix.join(FtpClient.serverRoot, 'plugins')
     const fileInfos = await client.list(pluginsPath)
 
-    const plugins = getPlugins(options)
-    let plugin
-    while ((plugin = plugins.shift())) {
-      // Per plugin TRY/CATCH
-      try {
-        console.log(chalk.bold(`${plugin.title}:`))
+    await foreachPlugin(options, async (plugin) => {
+      console.log(chalk.bold(`${plugin.title}:`))
 
-        const remoteMatches = findServerMatches(plugin, fileInfos)
-        const localMatches = await findLocalPluginFiles(plugin)
-        const latestLocal = localMatches.at(-1)
-        const latestRemote = remoteMatches.at(-1)
+      const remoteMatches = findServerMatches(plugin, fileInfos)
+      const localMatches = await findLocalPluginFiles(plugin)
+      const latestLocal = localMatches.at(-1)
+      const latestRemote = remoteMatches.at(-1)
 
-        if (!latestLocal) {
-          console.log(
-            chalk.yellow(`  No local files found for plugin, skipping upload.`)
-          )
-          continue
-        }
-
-        if (!latestRemote) {
-          console.log(
-            chalk.yellow(
-              `  No files found on server for plugin, skipping removal.`
-            )
-          )
-          continue
-        }
-
-        if (latestRemote.fileBaseName === latestLocal.fileBaseName) {
-          console.log(
-            chalk.dim(`  No changes detected for plugin, skipping upload.`)
-          )
-          continue
-        }
-
-        // Upload new version to server.
-        const localStream = createReadStream(latestLocal.filePath)
-        await client.uploadFrom(
-          localStream,
-          p.posix.join(pluginsPath, latestLocal.fileBaseName)
-        )
+      if (!latestLocal) {
         console.log(
-          chalk.green(`  Uploaded new version: ${latestLocal.fileBaseName}`)
+          chalk.yellow(`  No local files found for plugin, skipping upload.`)
         )
-
-        // Remove old remote files after uploading new version to not break server in case of upload failure.
-        for (const remoteMatch of remoteMatches) {
-          await client.remove(
-            p.posix.join(pluginsPath, remoteMatch.fileBaseName)
-          )
-          console.log(
-            chalk.yellow(`  Removed old version: ${remoteMatch.fileBaseName}`)
-          )
-        }
-      } catch (err) {
-        console.error(`Failed to upload files for plugin ${plugin.title}:`, err)
+        return
       }
-    }
+
+      if (!latestRemote) {
+        console.log(
+          chalk.yellow(
+            `  No files found on server for plugin, skipping removal.`
+          )
+        )
+        return
+      }
+
+      if (latestRemote.fileBaseName === latestLocal.fileBaseName) {
+        console.log(
+          chalk.dim(`  No changes detected for plugin, skipping upload.`)
+        )
+        return
+      }
+
+      // Upload new version to server.
+      const localStream = createReadStream(latestLocal.filePath)
+      await client.uploadFrom(
+        localStream,
+        p.posix.join(pluginsPath, latestLocal.fileBaseName)
+      )
+      console.log(
+        chalk.green(`  Uploaded new version: ${latestLocal.fileBaseName}`)
+      )
+
+      // Remove old remote files after uploading new version to not break server in case of upload failure.
+      for (const remoteMatch of remoteMatches) {
+        await client.remove(p.posix.join(pluginsPath, remoteMatch.fileBaseName))
+        console.log(
+          chalk.yellow(`  Removed old version: ${remoteMatch.fileBaseName}`)
+        )
+      }
+    })
   } catch (err) {
     console.error('Failed to connect to server:', err)
     return
   } finally {
-    client?.close()
+    client!.close()
   }
 }
 
