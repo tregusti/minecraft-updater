@@ -1,0 +1,9 @@
+{
+  "formatter": {
+    "external": {
+      "command": "node_modules/.bin/prettier",
+      "arguments": ["--stdin-filepath", "{buffer_path}"],
+    },
+  },
+  "format_on_save": "on",
+}
