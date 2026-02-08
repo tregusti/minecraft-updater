@@ -2,11 +2,7 @@ import chalk from 'chalk'
 import p from 'path'
 import { dateTimeString } from '../utils/datetime.mts'
 import { FileFinder } from '../utils/FileFinder.mts'
-import {
-  getArtifactFilename,
-  mkdir,
-  readSecretFile,
-} from '../utils/fileUtils.mts'
+import { getArtifactFilename, mkdir, readSecretFile } from '../utils/fileUtils.mts'
 import FtpClient from '../utils/FtpClient.mts'
 import Log from '../utils/Log.mts'
 
@@ -17,11 +13,7 @@ export const BackupCommand = async () => {
   const logger = new Log('Backup')
 
   const datetime = dateTimeString()
-  logger.info(
-    `Backing up into: ${chalk.greenBright(
-      getArtifactFilename('backup', datetime)
-    )}`
-  )
+  logger.info(`Backing up into: ${chalk.greenBright(getArtifactFilename('backup', datetime))}`)
 
   let client
   try {
@@ -51,16 +43,9 @@ export const BackupCommand = async () => {
 
       for (const match of matches) {
         const relativeArtifactFilename = p.relative(ftpRoot, match)
-        const artifactFilename = getArtifactFilename(
-          'backup',
-          datetime,
-          relativeArtifactFilename
-        )
+        const artifactFilename = getArtifactFilename('backup', datetime, relativeArtifactFilename)
         await mkdir(p.dirname(artifactFilename))
-        logger.info(
-          `  Downloading match "${relativeArtifactFilename}"... `,
-          Log.WillAppend
-        )
+        logger.info(`  Downloading match "${relativeArtifactFilename}"... `, Log.WillAppend)
         const res = await client.downloadTo(artifactFilename, match)
         if (res.code >= 200 && res.code < 300) {
           logger.append(chalk.greenBright('DONE'))

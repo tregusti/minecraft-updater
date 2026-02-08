@@ -22,10 +22,7 @@ export type PluginFile = {
   version: string | null
 }
 
-export function createPluginFile(
-  filePath: string,
-  plugin: UpdatePlugin
-): PluginFile {
+export function createPluginFile(filePath: string, plugin: UpdatePlugin): PluginFile {
   const fileObj = path.parse(filePath)
   const fileBaseName = fileObj.base
   const fileStem = fileObj.name

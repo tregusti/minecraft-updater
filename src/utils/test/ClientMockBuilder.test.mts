@@ -36,7 +36,7 @@ describe('ClientMockBuilder', () => {
       expect.arrayContaining([
         expect.objectContaining({ name: 'elephant', type: 1 }),
         expect.objectContaining({ name: 'rhinoceros', type: 1 }),
-      ])
+      ]),
     )
   })
   it('lists the directories and files in a directory', async () => {
@@ -52,7 +52,7 @@ describe('ClientMockBuilder', () => {
       expect.arrayContaining([
         expect.objectContaining({ name: 'elephant', type: 1 }),
         expect.objectContaining({ name: 'cat', type: 2 }),
-      ])
+      ]),
     )
   })
 })

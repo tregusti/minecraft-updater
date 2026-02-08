@@ -89,8 +89,7 @@ export default class Log {
   }
   #writeToStream(level: Level, output: string) {
     if (this.#allowWriteForLevel(level)) {
-      const stream =
-        level === Log.Levels.Error ? process.stderr : process.stdout
+      const stream = level === Log.Levels.Error ? process.stderr : process.stdout
       stream.write(output)
     }
   }
@@ -106,11 +105,7 @@ export default class Log {
 
   append(...params: unknown[]) {
     if (!this.#appendLevel) {
-      logger.warning(
-        `Logger ${
-          this.#name
-        } is trying to append to line when not in append mode.`
-      )
+      logger.warning(`Logger ${this.#name} is trying to append to line when not in append mode.`)
       this.info(...params)
     } else if (this.#allowWriteForLevel(this.#appendLevel)) {
       this.#write({ appending: true }, ...params)

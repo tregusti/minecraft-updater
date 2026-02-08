@@ -6,7 +6,7 @@ let artifacts: any[]
 const getArtifact = async (name: string) => {
   if (!artifacts) {
     const res = await fetch(
-      'https://ci-api.essentialsx.net/job/EssentialsX/lastSuccessfulBuild/api/json'
+      'https://ci-api.essentialsx.net/job/EssentialsX/lastSuccessfulBuild/api/json',
     )
     const json = await res.json()
     artifacts = json.artifacts
@@ -26,7 +26,10 @@ const getPlugin = async (name: string) => {
 class EssentialsXPlugin implements UpdatePlugin {
   public fileStartsWith: string
 
-  constructor(public id: string, public title: string) {
+  constructor(
+    public id: string,
+    public title: string,
+  ) {
     this.fileStartsWith = id
   }
 
@@ -44,27 +47,15 @@ class EssentialsXPlugin implements UpdatePlugin {
   }
 }
 
-export const EssentialsCore = new EssentialsXPlugin(
-  'EssentialsX',
-  'EssentialsX Core'
-)
+export const EssentialsCore = new EssentialsXPlugin('EssentialsX', 'EssentialsX Core')
 
-export const EssentialsChat = new EssentialsXPlugin(
-  'EssentialsXChat',
-  'EssentialsX Chat'
-)
+export const EssentialsChat = new EssentialsXPlugin('EssentialsXChat', 'EssentialsX Chat')
 
-export const EssentialsSpawn = new EssentialsXPlugin(
-  'EssentialsXSpawn',
-  'EssentialsX Spawn'
-)
+export const EssentialsSpawn = new EssentialsXPlugin('EssentialsXSpawn', 'EssentialsX Spawn')
 
 export const EssentialsAntiBuild = new EssentialsXPlugin(
   'EssentialsXAntiBuild',
-  'EssentialsX AntiBuild'
+  'EssentialsX AntiBuild',
 )
 
-export const EssentialsProtect = new EssentialsXPlugin(
-  'EssentialsXProtect',
-  'EssentialsX Protect'
-)
+export const EssentialsProtect = new EssentialsXPlugin('EssentialsXProtect', 'EssentialsX Protect')

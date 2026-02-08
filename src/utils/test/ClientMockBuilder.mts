@@ -43,9 +43,7 @@ class ClientMock {
     if (this.#matches(fullpath).length > 0) {
       this.#pwd = fullpath
     } else {
-      throw new TypeError(
-        `ClientMock: The path is invalid. path=${path} resolved=${fullpath}`
-      )
+      throw new TypeError(`ClientMock: The path is invalid. path=${path} resolved=${fullpath}`)
     }
   }
   async pwd() {

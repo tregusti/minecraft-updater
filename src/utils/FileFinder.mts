@@ -39,9 +39,7 @@ export class FileFinder {
 
   async match(pattern: string) {
     if (pattern?.includes('**')) {
-      throw new SyntaxError(
-        'The FileFinder pattern can not contain a double star (**)'
-      )
+      throw new SyntaxError('The FileFinder pattern can not contain a double star (**)')
     }
 
     const mm = new Minimatch(pattern, {

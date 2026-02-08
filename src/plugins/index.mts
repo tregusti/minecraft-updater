@@ -46,8 +46,8 @@ export const getPlugins = (options: Options) => {
   if (options?.name) {
     return allPlugins.filter((plugin) =>
       options.name?.some((name) =>
-        plugin.title.toLocaleLowerCase().includes(name.toLocaleLowerCase())
-      )
+        plugin.title.toLocaleLowerCase().includes(name.toLocaleLowerCase()),
+      ),
     )
   } else {
     return allPlugins
@@ -64,17 +64,14 @@ export const getPlugins = (options: Options) => {
  */
 export const foreachPlugin = async (
   options: Options,
-  callback: (plugin: UpdatePlugin) => Promise<void>
+  callback: (plugin: UpdatePlugin) => Promise<void>,
 ) => {
   for (const plugin of getPlugins(options)) {
     try {
       await callback(plugin)
     } catch (err) {
       const error = err as Error
-      console.error(
-        chalk.red(`Error processing plugin ${plugin.title}:`),
-        error?.message || error
-      )
+      console.error(chalk.red(`Error processing plugin ${plugin.title}:`), error?.message || error)
       if (Constants.DEBUG && error?.stack) {
         console.error(error.stack.toString())
       }

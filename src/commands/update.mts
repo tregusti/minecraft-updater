@@ -6,6 +6,7 @@ import { foreachPlugin } from '../plugins/index.mts'
 import type { Options } from '../types.mts'
 import { getArtifactFilename, saveFile } from '../utils/fileUtils.mts'
 import { findLocalPluginFiles } from '../utils/pluginFileUtils.mts'
+import Constants from '../utils/Constants.mts'
 
 export const UpdateCommand = async (options: Options) => {
   await foreachPlugin(options, async (plugin) => {
@@ -19,9 +20,7 @@ export const UpdateCommand = async (options: Options) => {
 
     const artifact = getArtifactFilename('plugins', info.fileBaseName)
     const localFiles = await findLocalPluginFiles(plugin)
-    const isPresent = localFiles.some(
-      (file) => file.fileBaseName === p.basename(info.fileBaseName)
-    )
+    const isPresent = localFiles.some((file) => file.fileBaseName === p.basename(info.fileBaseName))
     if (!options.force && isPresent) {
       console.log(chalk.green('No update'))
       console.log(chalk.dim(`  Filename ${info.fileBaseName}`))
@@ -29,7 +28,7 @@ export const UpdateCommand = async (options: Options) => {
       if (options.force) {
         console.log(chalk.yellow('Forced update'))
       } else {
-        const lastLocalVersion = localFiles.at(-1)?.version || '0.0.0'
+        const lastLocalVersion = localFiles.at(-1)?.version || Constants.NO_VERSION
         if (semver.diff(info.version, lastLocalVersion) === 'major') {
           console.log(chalk.red('Major update available'))
         } else {
@@ -37,9 +36,7 @@ export const UpdateCommand = async (options: Options) => {
         }
       }
       if (info.changelog) {
-        console.log(
-          chalk.dim(`  Changelog:           ${chalk.yellow(info.changelog)}`)
-        )
+        console.log(chalk.dim(`  Changelog:           ${chalk.yellow(info.changelog)}`))
       }
       process.stdout.write(chalk.dim(`  Downloading file...  `))
 
@@ -49,11 +46,7 @@ export const UpdateCommand = async (options: Options) => {
       const buffer = Buffer.from(await res.arrayBuffer())
       console.log(chalk.green('Done'))
 
-      console.log(
-        chalk.dim(
-          `  Saving file...       ${chalk.reset.green(info.fileBaseName)}`
-        )
-      )
+      console.log(chalk.dim(`  Saving file...       ${chalk.reset.green(info.fileBaseName)}`))
       await saveFile({
         buffer,
         filePath: artifact,

@@ -21,10 +21,7 @@ describe('FileFinder', () => {
   })
 
   it('matches with simple star glob', async () => {
-    const client = ClientMockBuilder.create()
-      .file('red.1')
-      .file('red.2')
-      .build()
+    const client = ClientMockBuilder.create().file('red.1').file('red.2').build()
     const ff = new FileFinder({ client })
     const matches = await ff.match('red.*')
     expect(matches).toEqual(['/red.1', '/red.2'])

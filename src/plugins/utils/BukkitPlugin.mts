@@ -20,12 +20,8 @@ const getPlugin = async (projectName: string) => {
 
 const getLatestRelease = async (projectName: string) => {
   const dom = await JSDOM.fromURL(`${baseUrl}/projects/${projectName}/files`)
-  const nameNode = dom.window.document.querySelector(
-    '#content .project-file-name'
-  )
-  const infoPath = nameNode
-    ?.querySelector('.project-file-name-container a')
-    ?.getAttribute('href')
+  const nameNode = dom.window.document.querySelector('#content .project-file-name')
+  const infoPath = nameNode?.querySelector('.project-file-name-container a')?.getAttribute('href')
   const downloadPath = nameNode
     ?.querySelector('.project-file-download-button a')
     ?.getAttribute('href')
@@ -42,9 +38,7 @@ const getLatestRelease = async (projectName: string) => {
 
 const getFileBaseName = async (infoPath: string) => {
   const dom = await JSDOM.fromURL(baseUrl + infoPath)
-  const div = dom.window.document.querySelector(
-    '#content .details-info li .info-data'
-  )
+  const div = dom.window.document.querySelector('#content .details-info li .info-data')
 
   if (!div || !div.textContent) {
     throw new Error(`Error getting file base name`)

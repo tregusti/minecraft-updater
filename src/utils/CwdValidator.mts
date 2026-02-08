@@ -14,9 +14,7 @@ export const ensureCorrectCWD = () => {
 
   if (cwd !== rootdir) {
     const strNav = chalk.yellowBright(`cd ${rootdir}`)
-    const strCmd = chalk.yellowBright(
-      `${PackageJson.name} ${process.argv.slice(2).join(' ')}`
-    )
+    const strCmd = chalk.yellowBright(`${PackageJson.name} ${process.argv.slice(2).join(' ')}`)
     console.error(
       chalk.red(dedent`
         '${PackageJson.name}' tool should be invoked from the correct folder.
@@ -26,7 +24,7 @@ export const ensureCorrectCWD = () => {
         
         The invoke your command again:
           ${strCmd}
-      `)
+      `),
     )
     process.exit(3)
   }

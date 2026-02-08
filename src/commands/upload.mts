@@ -30,44 +30,29 @@ export const UploadCommand = async (options: Options) => {
       const latestRemote = remoteMatches.at(-1)
 
       if (!latestLocal) {
-        console.log(
-          chalk.yellow(`  No local files found for plugin, skipping upload.`)
-        )
+        console.log(chalk.yellow(`  No local files found for plugin, skipping upload.`))
         return
       }
 
       if (!latestRemote) {
-        console.log(
-          chalk.yellow(
-            `  No files found on server for plugin, skipping removal.`
-          )
-        )
+        console.log(chalk.yellow(`  No files found on server for plugin, skipping removal.`))
         return
       }
 
       if (latestRemote.fileBaseName === latestLocal.fileBaseName) {
-        console.log(
-          chalk.dim(`  No changes detected for plugin, skipping upload.`)
-        )
+        console.log(chalk.dim(`  No changes detected for plugin, skipping upload.`))
         return
       }
 
       // Upload new version to server.
       const localStream = createReadStream(latestLocal.filePath)
-      await client.uploadFrom(
-        localStream,
-        p.posix.join(pluginsPath, latestLocal.fileBaseName)
-      )
-      console.log(
-        chalk.green(`  Uploaded new version: ${latestLocal.fileBaseName}`)
-      )
+      await client.uploadFrom(localStream, p.posix.join(pluginsPath, latestLocal.fileBaseName))
+      console.log(chalk.green(`  Uploaded new version: ${latestLocal.fileBaseName}`))
 
       // Remove old remote files after uploading new version to not break server in case of upload failure.
       for (const remoteMatch of remoteMatches) {
         await client.remove(p.posix.join(pluginsPath, remoteMatch.fileBaseName))
-        console.log(
-          chalk.yellow(`  Removed old version: ${remoteMatch.fileBaseName}`)
-        )
+        console.log(chalk.yellow(`  Removed old version: ${remoteMatch.fileBaseName}`))
       }
     })
   } catch (err) {
@@ -78,10 +63,7 @@ export const UploadCommand = async (options: Options) => {
   }
 }
 
-const findServerMatches = (
-  plugin: UpdatePlugin,
-  fileInfos: FileInfo[]
-): PluginFile[] => {
+const findServerMatches = (plugin: UpdatePlugin, fileInfos: FileInfo[]): PluginFile[] => {
   const fileStartsWith = plugin.fileStartsWith ?? plugin.title
   const pattern = `${fileStartsWith}-*.*`
   const mm = new Minimatch(pattern, {
