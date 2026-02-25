@@ -1,6 +1,7 @@
-import chalk from 'chalk'
 import fs from 'fs/promises'
 import path from 'path'
+
+import chalk from 'chalk'
 
 import { foreachPlugin } from '../plugins/index.mts'
 import type { Options } from '../types.mts'

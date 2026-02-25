@@ -1,9 +1,11 @@
+import { createReadStream } from 'node:fs'
+import p from 'node:path'
+
 import type { Client, FileInfo } from 'basic-ftp'
 import chalk from 'chalk'
 import { Minimatch } from 'minimatch'
-import { createReadStream } from 'node:fs'
-import p from 'node:path'
-import { foreachPlugin, getPlugins } from '../plugins/index.mts'
+
+import { foreachPlugin } from '../plugins/index.mts'
 import type { Options, UpdatePlugin } from '../types.mts'
 import Constants from '../utils/Constants.mts'
 import FtpClient from '../utils/FtpClient.mts'
@@ -13,6 +15,7 @@ import {
   findLocalPluginFiles,
   type PluginFile,
 } from '../utils/pluginFileUtils.mts'
+import Work from '../utils/Work.mts'
 
 export const UploadCommand = async (options: Options) => {
   let client: Client
@@ -45,21 +48,35 @@ export const UploadCommand = async (options: Options) => {
       }
 
       // Upload new version to server.
-      const localStream = createReadStream(latestLocal.filePath)
-      await client.uploadFrom(localStream, p.posix.join(pluginsPath, latestLocal.fileBaseName))
-      console.log(chalk.green(`  Uploaded new version: ${latestLocal.fileBaseName}`))
+      await Work.do(
+        chalk.green(`  Upload new version: #`),
+        async () => {
+          const localStream = createReadStream(latestLocal.filePath)
+          await client.uploadFrom(localStream, p.posix.join(pluginsPath, latestLocal.fileBaseName))
+        },
+        latestLocal.fileBaseName,
+      )
 
       // Remove old remote files after uploading new version to not break server in case of upload failure.
       for (const remoteMatch of remoteMatches) {
-        await client.remove(p.posix.join(pluginsPath, remoteMatch.fileBaseName))
-        console.log(chalk.yellow(`  Removed old version: ${remoteMatch.fileBaseName}`))
+        await Work.do(
+          chalk.yellow(`  Remove old version: #`),
+          () => client.remove(p.posix.join(pluginsPath, remoteMatch.fileBaseName)),
+          remoteMatch.fileBaseName,
+        )
       }
     })
   } catch (err) {
-    console.error('Failed to connect to server:', err)
+    const error = err as Error
+    console.error('Failed to connect to server:', error)
+    if (Constants.DEBUG && error?.stack) {
+      console.error(error.stack.toString())
+    }
     return
   } finally {
-    client!.close()
+    if (client!) {
+      client.close()
+    }
   }
 }
 
