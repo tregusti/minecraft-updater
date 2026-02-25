@@ -6,7 +6,7 @@ export default {
     return process.argv.includes('-d') || !!process.env.MC_DEBUG
   },
   get DEEP_DEBUG() {
-    return process.argv.includes('-dd') || !!process.env.MC_DEEP_DEBUG
+    return process.argv.includes('-D') || !!process.env.MC_DEEP_DEBUG
   },
   get NO_VERSION() {
     return '0.0.0-unknown'

@@ -1,13 +1,17 @@
 import { Command } from 'commander'
+
+import { BackupCommand } from './commands/backup.mts'
 import { CleanCommand } from './commands/clean.mts'
 import { UpdateCommand } from './commands/update.mts'
 import { UploadCommand } from './commands/upload.mts'
-import { BackupCommand } from './commands/backup.mts'
 import type { Options } from './types.mts'
 import { ensureCorrectCWD } from './utils/CwdValidator.mts'
 
 const program = new Command()
-program.description('CLI tool to manage our PI Minecraft server config.').option('-d, --debug')
+program
+  .description('CLI tool to manage our PI Minecraft server config.')
+  .option('-d, --debug', 'Enables debug logging for this CLI tool.')
+  .option('-D, --deep-debug', 'Enables debugging for all dependencies, not just this CLI tool.')
 
 program
   .command('update')
