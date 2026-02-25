@@ -1,4 +1,5 @@
 import semver from 'semver'
+
 import Constants from './Constants.mts'
 
 const collator = new Intl.Collator('en', { numeric: true })
@@ -14,4 +15,10 @@ export const extractVersionFromName = (name: string) => {
   const versionObject = semver.coerce(name, { includePrerelease: true })
   const version = semver.valid(versionObject)
   return version || Constants.NO_VERSION
+}
+
+export const debug = (message: string, ...args: any[]) => {
+  if (Constants.DEBUG || Constants.DEEP_DEBUG) {
+    console.debug(message, ...args)
+  }
 }

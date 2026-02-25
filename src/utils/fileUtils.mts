@@ -1,9 +1,8 @@
-import chalk from 'chalk'
 import fs from 'fs/promises'
 import p from 'path'
-import Log from './Log.mjs'
 
-const logger = new Log('FileUtils')
+import { debug } from './minis.mts'
+
 const __dirname = import.meta.dirname
 const secretsPath = p.resolve(import.meta.dirname, '../../secrets')
 
@@ -11,23 +10,23 @@ export const getArtifactFilename = (type: 'backup' | 'plugins', ...fileBaseNames
   p.resolve(__dirname, '../../artifacts', type, ...fileBaseNames)
 
 export const glob = async (glob: string) => {
-  logger.debug(`glob: "${glob}"... `, Log.WillAppend)
+  debug(`glob: "${glob}"... `)
   const result = await fs.glob(glob)
-  logger.append(chalk.green('DONE'))
+  debug('glob DONE')
   return result
 }
 
 export const rm = async (filePath: string) => {
-  logger.debug(`rm: "${filePath}"... `, Log.WillAppend)
+  debug(`rm: "${filePath}"... `)
   const result = await fs.rm(filePath)
-  logger.append(chalk.green('DONE'))
+  debug('rm DONE')
   return result
 }
 
 export const mkdir = async (path: string) => {
-  logger.debug(`mkdir: "${path}"... `, Log.WillAppend)
+  debug(`mkdir: "${path}"... `)
   const result = await fs.mkdir(path, { recursive: true })
-  logger.append(chalk.green('DONE'))
+  debug('mkdir DONE')
   return result
 }
 

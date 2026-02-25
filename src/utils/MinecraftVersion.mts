@@ -1,4 +1,4 @@
-import Log from './Log.mts'
+import { debug } from './minis.mts'
 
 type Version = 'release' | 'snapshot'
 type Release = {
@@ -9,7 +9,6 @@ type Release = {
 }
 
 const VERSIONS: string[] = []
-const logger = new Log('MinecraftVersion')
 
 const ensurePopulated = async () => {
   if (VERSIONS.length > 0) return
@@ -24,7 +23,7 @@ const ensurePopulated = async () => {
 
   VERSIONS.push(...releases.map((release) => release.version))
 
-  logger.debug('Populated Minecraft versions:', VERSIONS)
+  debug('Populated Minecraft versions:', VERSIONS)
 }
 
 export const getLastMinecraftVersion = async (count: number = 1) => {
